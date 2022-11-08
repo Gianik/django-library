@@ -1,0 +1,41 @@
+{% extends "partials/base.html"%}
+{% block content %}
+
+        <article class="media content-section">
+            <div class="media-body">
+              <div class="article-metadata" id="div1">
+                <p class="article-content"  id="title" >{{ post.title }}</p>
+                <p class="article-content"  id="email" >{{ post.author }}</p>
+                <p class="article-content"  id="id" >{{ post.id }}</p>
+                <p class="article-content" id="title" >{{ post.email }}</p>
+              </div>
+              <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            </div>
+        </article>
+
+{% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  $.ajax({
+    url: 'http://127.0.0.1:8000/articles/',
+    type: "GET",
+    dataType: "json",
+    success: (data) => {
+      var html= '';
+      $(data).each(function(index,value){
+        html += "<p class="+'article-content'+">" + value.title + "</p> <small>" + value.author + "</small> <a href="+'http://127.0.0.1:8000/detail/'+ value.id +" >" + value.id + "</a> <small>" + value.email + "</small> <br />"
+        
+      })
+      
+      $("#div1").append(html)
+    },
+    error: (error) => {
+      console.log(error);
+    }
+  });
+
+})
+</script>
+{% endblock %}
+
