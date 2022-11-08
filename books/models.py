@@ -2,7 +2,7 @@ from django.db import models
 from users.models import User
 
 
-class Book(models.Model):
+class Books(models.Model):
     AVAILABLE = "AV"
     CHECKED_OUT = "CO"
     DAMAGED = "DA"
@@ -45,7 +45,7 @@ class Comments(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE)
     post = models.ForeignKey(
-        Book, related_name='comments', on_delete=models.CASCADE)
+        Books, related_name='comments', on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 

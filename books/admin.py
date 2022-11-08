@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Book, Comments
+from .models import Books, Comments
 
-admin.site.register(Book)
+admin.site.register(Books)
 admin.site.register(Comments)
 # Register your models here.
