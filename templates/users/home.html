@@ -4,13 +4,10 @@
         <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata" id="div1">
-                <p class="article-content"  id="title" >{{ post.title }}</p>
-                <p class="article-content"  id="email" >{{ post.author }}</p>
-                <p class="article-content"  id="id" >{{ post.id }}</p>
-                <p class="article-content" id="title" >{{ post.email }}</p>
+                <a class="mr-2" href="#"></a>
+                <h2><a class="article-title" href="#"></a></h2>
               </div>
-              <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            </div>
+
         </article>
 
 {% endblock content %}
@@ -22,8 +19,17 @@ $(document).ready(function(){
     type: "GET",
     dataType: "json",
     success: (data) => {
-      console.log(data)
+      var html='';
+      $(data).each(function(index,value){
+        html+="<div class="+'article-metadata'+" ><h2><a class="+'article-title'+" href="+'#'+" >"+ value.title + "</a></h2>"
+        $(value.author).each(function(index,value2){
+          html+="<a class="+'mr-2'+"  >" + value2.full_name + "</a>"
+        })
+        html+="</div>"
+      })
       
+      $("#div1").append(html)
+
     },
     error: (error) => {
       console.log(error);
