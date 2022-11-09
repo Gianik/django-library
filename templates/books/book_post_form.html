@@ -1,24 +1,106 @@
 {% extends "partials/base.html"%}
 {% block content %}
     <div class="content-section">
-        <form method="POST" novalidate id='post_article'>
+        <form method="POST" novalidate id='post_book'>
             {% csrf_token %}
             <fieldset class="form-group"> 
-                <legend class="border-bottom mb-4">Article Post</legend>
+                <legend class="border-bottom mb-4">Add New Book</legend>
             </fieldset>
-            <label for="atitle">Title:</label>
-            <input type="text" id="atitle" name="atitle"><br><br>
-            <label for="aemail">Email:</label>
-            <input type="text" id="aemail" name="aemail"><br><br>
-            <label for="aauthor">Author:</label>
-            <input type="text" id="aauthor" name="aauthor"><br><br>
+            <label for="btitle">Title:</label>
+            <input type="text" id="btitle" name="btitle"><br><br>
+            <label for="bstatus">Status:</label>
+
+            <select name="bstatus" id="bstatus">
+              <option value=1 >Available</option>
+              <option value=2 >Checked_out</option>
+              <option value=3>Damaged</option>
+              <option value=4>Lost</option>
+            </select>
+            <br />
+            <label for="btype">Type:</label>
+
+            <select name="btype" id="btype">
+              <option value=1 >Hardcover</option>
+              <option value=2 >Paperback</option>
+              <option value=3>Digital Copy</option>
+            </select>
+            <br />
+            <label for="blocation">Location:</label>
+            
+            <select name="blocation" id="blocation">
+              <option value=1 >Exactus Office</option>
+              <option value=2 >Owner’s Home</option>
+              <option value=3>In the Matrix</option>
+            </select>
+            <br />
+            <label for="bowner">Owner:</label>
+            
+            <select name="bowner" id="bowner">
+            </select>
+
+            <br />
+            <label for="bauthor">Author:</label>
+            
+            <select name="bauthor" id="bauthor" multiple>
+            </select>
+
+
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Post</button>
             </div>
 
 
         </form>
-        <p id='test_message'></p>
     </div>
 
 {% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  $.ajax({
+    url: 'http://127.0.0.1:8000/authors',
+    type: "GET",
+    dataType: "json",
+    success: (data) => {
+      var html = ''
+      var html2=''
+      $(data).each(function(index,value){
+        html+="<option value="+value.id+" >" + value.full_name + "</option>"
+      })
+      $("#bauthor").append(html)
+      $("#bowner").append(html)
+    },
+    error: (error) => {
+      console.log(error);
+    }
+  });
+    $("#post_book").submit(function(event){
+        event.preventDefault();
+        console.log($('#bowner').val())
+        $.ajax({
+            url:"http://127.0.0.1:8000/book/",
+            type:"POST",
+            dataType:"JSON",
+            data:{
+                title:$('#btitle').val(),
+                author:$('#bauthor').val(),
+                status:$('#bstatus').val(),
+                type:$('#btype').val(),
+                location:$('#blocation').val(),
+                owner:$('#bowner').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success:()=>{
+                window.location.replace("http://127.0.0.1:8000/")
+            },
+            error:(error)=>{
+                console.log(error)
+            },
+        });
+    return false;
+});  
+
+})
+</script>
+{% endblock %}
+

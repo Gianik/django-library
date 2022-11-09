@@ -5,8 +5,8 @@ from .views import NewBookView
 urlpatterns = [
     path('new/', NewBookView.as_view(), name='new-book'),
     path('', BookViewSet.as_view({
-        'get': 'list'
-
+        'get': 'list',
+        'post': 'create'
     }), name='book-list')
 
 

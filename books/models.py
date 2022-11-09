@@ -8,7 +8,7 @@ class Books(models.Model):
     author = models.ManyToManyField(
         User, related_name='book_authors')
     owner = models.ForeignKey(
-        User, related_name='book_owner', on_delete=models.CASCADE)
+        User, related_name='book_owner', null=True, blank=True, on_delete=models.CASCADE)
     checked_out_by = models.ForeignKey(
         User, related_name='book_borrower', null=True, blank=True, on_delete=models.CASCADE, default="")
     check_out_date = models.DateTimeField(auto_now=True)
@@ -25,7 +25,7 @@ class Books(models.Model):
     ), default=1)
     location = models.PositiveSmallIntegerField(choices=(
         (1, "Exactus Office"),
-        (2, "Owner’s Home"),
+        (2, "Owner's Home"),
         (3, "In the Matrix"),
     ), default=1)
 
@@ -37,7 +37,7 @@ class Comments(models.Model):
     text = models.CharField(max_length=100)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE)
-    post = models.ForeignKey(
+    book = models.ForeignKey(
         Books, related_name='comments', on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

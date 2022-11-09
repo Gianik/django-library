@@ -1,17 +1,7 @@
 from rest_framework import serializers
 from .models import Books
 from users.models import User
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    full_name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ['id', 'full_name']
-
-    def get_full_name(self, obj):
-        return '{} {}'.format(obj.first_name, obj.last_name)
+from users.serializers import AuthorSerializer
 
 
 class BookListSerializer(serializers.ModelSerializer):
@@ -20,6 +10,7 @@ class BookListSerializer(serializers.ModelSerializer):
     # location = serializers.CharField(source='get_location_display')
     # status = serializers.CharField(source='get_status_display')
     author = AuthorSerializer(read_only=True, many=True)
+    # author = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Books
@@ -33,3 +24,10 @@ class BookListSerializer(serializers.ModelSerializer):
     #         ' ' + instance.checked_out_by.last_name
 
     #     return response
+
+
+class NewBookSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Books
+        fields = ['title', 'author', 'status', 'type', 'location', 'owner']
