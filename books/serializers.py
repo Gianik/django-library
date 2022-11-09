@@ -8,7 +8,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['full_name']
+        fields = ['id', 'full_name']
 
     def get_full_name(self, obj):
         return '{} {}'.format(obj.first_name, obj.last_name)

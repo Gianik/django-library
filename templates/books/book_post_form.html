@@ -1,0 +1,24 @@
+{% extends "partials/base.html"%}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" novalidate id='post_article'>
+            {% csrf_token %}
+            <fieldset class="form-group"> 
+                <legend class="border-bottom mb-4">Article Post</legend>
+            </fieldset>
+            <label for="atitle">Title:</label>
+            <input type="text" id="atitle" name="atitle"><br><br>
+            <label for="aemail">Email:</label>
+            <input type="text" id="aemail" name="aemail"><br><br>
+            <label for="aauthor">Author:</label>
+            <input type="text" id="aauthor" name="aauthor"><br><br>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Post</button>
+            </div>
+
+
+        </form>
+        <p id='test_message'></p>
+    </div>
+
+{% endblock content %}

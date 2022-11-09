@@ -12,3 +12,8 @@ class BookViewSet(viewsets.ViewSet):
         books = Books.objects.all()
         serializer = BookListSerializer(books, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
+
+
+# class BookChoicesViewset(viewsets.ViewSet):
+
+#     def list(self,request):

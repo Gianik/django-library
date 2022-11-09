@@ -3,17 +3,6 @@ from users.models import User
 
 
 class Books(models.Model):
-    AVAILABLE = "AV"
-    CHECKED_OUT = "CO"
-    DAMAGED = "DA"
-    LOST = "LO"
-
-    STATUS_CHOICES = [
-        (AVAILABLE, 'Available'),
-        (CHECKED_OUT, 'Checked_out'),
-        (DAMAGED, 'Damaged'),
-        (LOST, 'Lost'),
-    ]
 
     title = models.CharField(max_length=100)
     author = models.ManyToManyField(
@@ -21,10 +10,14 @@ class Books(models.Model):
     owner = models.ForeignKey(
         User, related_name='book_owner', on_delete=models.CASCADE)
     checked_out_by = models.ForeignKey(
-        User, related_name='book_borrower', on_delete=models.CASCADE)
+        User, related_name='book_borrower', null=True, blank=True, on_delete=models.CASCADE, default="")
     check_out_date = models.DateTimeField(auto_now=True)
-    status = models.CharField(
-        max_length=2, choices=STATUS_CHOICES, default=AVAILABLE)
+    status = models.PositiveSmallIntegerField(choices=(
+        (1, "Available"),
+        (2, "Checked_out"),
+        (3, "Damaged"),
+        (4, "Lost"),
+    ), default=1)
     type = models.PositiveSmallIntegerField(choices=(
         (1, "Hardcover"),
         (2, "Paperback"),
