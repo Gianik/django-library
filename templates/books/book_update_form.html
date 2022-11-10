@@ -67,7 +67,7 @@ $(document).ready(function() {
     var pk = {{pk}}
     $.ajax({
         type:"GET",
-        url:'http://127.0.0.1:8000/book/book-update/detail/'+pk,
+        url:'http://127.0.0.1:8000/book/update/detail/'+pk,
         success:(data)=>{
           var html1=''
           var html2=''
@@ -114,8 +114,9 @@ $(document).ready(function() {
     })
     $("#update_book").submit(function(event){
       event.preventDefault();
+      console.log($('#bauthor').val())
       $.ajax({
-          url:'http://127.0.0.1:8000/book/book-update/detail/'+pk+"/",
+          url:'http://127.0.0.1:8000/book/update/detail/'+pk+"/",
           type:"POST",
           dataType:"JSON",
           data:{
@@ -129,7 +130,7 @@ $(document).ready(function() {
               csrfmiddlewaretoken: '{{ csrf_token }}'
           },
           success:()=>{
-              window.location.replace("http://127.0.0.1:8000/")
+              window.location.replace("http://127.0.0.1:8000/book/detail/"+pk)
           },
           error:(error)=>{
               console.log(error)

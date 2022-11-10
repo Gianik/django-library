@@ -26,6 +26,14 @@ class BookListSerializer(serializers.ModelSerializer):
     #     return response
 
 
+class NewBookSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Books
+        fields = ['title', 'author', 'status', 'type', 'location', 'owner']
+
+
 class BookDetailSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
     location = serializers.CharField(source='get_location_display')
@@ -56,14 +64,16 @@ class BookUpdateDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class NewBookSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Books
-        fields = ['title', 'author', 'status', 'type', 'location', 'owner']
-
-
 class BookUpdateSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True, many=True)
+
     class Meta:
         model = Books
-        fields = '__all__'
+        fields = ['title', 'author', 'owner',
+                  'checked_out_by', 'status', 'type', 'location']
+
+
+class BookDeleteDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ['id', 'title']

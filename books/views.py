@@ -12,3 +12,7 @@ class BookDetailView(TemplateView):
 
 class BookUpdateView(TemplateView):
     template_name = 'books/book_update_form.html'
+
+
+class BookDeleteView(TemplateView):
+    template_name = 'books/book_delete_form.html'

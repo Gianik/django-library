@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDetailSerializer, BookUpdateSerializer
+from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDetailSerializer, BookUpdateSerializer, NewBookSerializer
 from .models import Books
 from users.models import User
 from django.shortcuts import get_object_or_404
@@ -18,7 +18,7 @@ class BookViewSet(viewsets.ViewSet):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def create(self, request):
-        serializer = BookListSerializer(data=request.data)
+        serializer = NewBookSerializer(data=request.data)
         queryset = User.objects.all()
         user = get_object_or_404(queryset, pk=request.POST['owner'])
         authors = queryset.filter(id__in=request.POST.getlist('author[]'))
@@ -33,11 +33,9 @@ class BookViewSet(viewsets.ViewSet):
         queryset = Books.objects.all()
         book = get_object_or_404(queryset, pk=pk)
         users = User.objects.all()
-        serializer2 = AuthorSerializer(users, many=True)
         serializer = BookDetailSerializer(book)
 
         return JsonResponse(serializer.data, safe=False, status=200)
-        # return JsonResponse({'data': serializer.data, 'data2': serializer2.data}, safe=False, status=200)
 
     def retrieve2(self, request, pk=None):
         queryset = Books.objects.all()
@@ -47,12 +45,18 @@ class BookViewSet(viewsets.ViewSet):
         serializer2 = AuthorSerializer(users, many=True)
         return JsonResponse({'data': serializer.data, 'data2': serializer2.data}, safe=False, status=200)
 
+    def retrieve3(self, request, pk=None):
+        book = get_object_or_404(Books, pk=pk)
+        serializer = BookDetailSerializer(book)
+        return JsonResponse(serializer.data, safe=False, status=200)
+
     def update(self, request, pk=None):
-        queryset = Books.objects.all()
-        book = get_object_or_404(queryset, pk=pk)
+        book = get_object_or_404(Books, pk=pk)
         serializer = BookUpdateSerializer(book, data=request.data)
+        queryset = User.objects.all()
+        authors = queryset.filter(id__in=request.POST.getlist('author[]'))
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author=authors)
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
