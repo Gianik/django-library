@@ -14,7 +14,7 @@ class Books(models.Model):
     check_out_date = models.DateTimeField(auto_now=True)
     status = models.PositiveSmallIntegerField(choices=(
         (1, "Available"),
-        (2, "Checked_out"),
+        (2, "Checked Out"),
         (3, "Damaged"),
         (4, "Lost"),
     ), default=1)
