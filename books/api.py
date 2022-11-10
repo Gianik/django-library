@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookListSerializer
+from .serializers import BookListSerializer, BookDetailSerializer
 from .models import Books
 from users.models import User
 from django.shortcuts import get_object_or_404
@@ -26,6 +26,12 @@ class BookViewSet(viewsets.ViewSet):
             serializer.save(owner=user, author=authors)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        queryset = Books.objects.all()
+        book = get_object_or_404(queryset, pk=pk)
+        serializer = BookDetailSerializer(book)
+        return JsonResponse(serializer.data, safe=False, status=200)
 
 
 # class BookChoicesViewset(viewsets.ViewSet):

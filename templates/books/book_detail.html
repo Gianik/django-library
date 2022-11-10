@@ -1,0 +1,73 @@
+{% extends "partials/base.html"%}
+{% block content %}
+        
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+            <small class="text-muted"></small>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="#">Delete</a>
+            </div>
+            <div class="article-metadata" id="div1">
+            <h2 class="article-title"></h2>
+            <small class="text-muted"></small>
+            <p class="article-content"></p>
+            <p class="article-content"></p>
+            <p class="article-content"></p>
+            <p class="article-content"></p>
+            <p class="article-content"></p>
+            </div>
+            <h3>Comments:</h3>
+            <div class="article-metadata" id="div2">
+            </div>
+
+        </div>
+    </article>
+
+{% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function() {
+    var pk = {{pk}}
+    $.ajax({
+        type:"GET",
+        url:'http://127.0.0.1:8000/book/book-detail/'+pk,
+        success:(data)=>{
+            console.log(data)
+            var html =''
+            html+="<div class="+'article-metadata'+" ><h2 class="+'article-title'+">Title: " + data.title +"</h2> Author: "
+            $(data.author).each(function(index,value){
+                html+="<small class="+'text-muted'+"  >" + value.full_name + " </small>"
+            })
+            if(!data.checked_out_by){
+                html+="<p class="+'article-content'+">Checkout by: " + "None" + 
+                    "</p><p class="+'article-content'+">Owner:" + data.owner + "</p>" +
+                    "<p class="+'article-content'+">Location: " + data.location + "</p><p class="+'article-content'+">Status: " + data.status + "</p>" +
+                    "<p class="+'article-content'+">Type: " + data.type + "</p></div>"
+
+            }
+            else{
+                html+="<p class="+'article-content'+">Checkout by: " + data.checked_out_by + 
+                    "</p><p class="+'article-content'+">Owner: " + data.owner + "</p>" +
+                    "<p class="+'article-content'+">Location: " + data.location + "</p><p class="+'article-content'+">Status: " + data.status + "</p>" +
+                    "<p class="+'article-content'+">Type: " + data.type + "</p></div>"
+
+            }
+
+
+            $("#div1").append(html)
+
+        },
+        error:(error)=>{
+            console.log(error)
+        }
+    })
+
+
+
+
+});
+
+</script>
+      
+{% endblock %}

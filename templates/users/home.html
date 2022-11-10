@@ -3,6 +3,7 @@
 
         <article class="media content-section">
             <div class="media-body">
+              <h2>Library Books:</h2>
               <div class="article-metadata" id="div1">
                 <a class="mr-2" href="#"></a>
                 <h2><a class="article-title" href="#"></a></h2>
@@ -19,12 +20,11 @@ $(document).ready(function(){
     type: "GET",
     dataType: "json",
     success: (data) => {
-      console.log(data)
       var html='';
       $(data).each(function(index,value){
-        html+="<div class="+'article-metadata'+" ><h2><a class="+'article-title'+" href="+'#'+" >"+ value.title + "</a></h2>"
+        html+="<div class="+'article-metadata'+" ><h2><a class="+'article-title'+" href="+'http://127.0.0.1:8000/book/detail/'+ value.id + " >Title: "+ value.title + "</a></h2>Author: "
         $(value.author).each(function(index,value2){
-          html+="<a class="+'mr-2'+"  >" + value2.full_name + "</a>"
+          html+="<a class="+'mr-2'+"  >" + value2.full_name + " </a>"
         })
         html+="</div>"
       })
