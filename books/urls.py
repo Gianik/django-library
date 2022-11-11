@@ -1,12 +1,15 @@
 from django.urls import path
-from .api import BookViewSet
-from .views import NewBookView, BookDetailView, BookUpdateView, BookDeleteView
+from .api import BookViewSet, CommentsViewSet
+from .views import NewBookView, BookDetailView, BookUpdateView, BookDeleteView, NewCommentView
 
 urlpatterns = [
     path('new/', NewBookView.as_view(), name='new-book'),
     path('detail/<int:pk>', BookDetailView.as_view(), name='book-detail'),
     path('update/<int:pk>', BookUpdateView.as_view(), name='book-update'),
     path('delete/<int:pk>', BookDeleteView.as_view(), name='book-delete'),
+    path('new/comment/<int:pk>', NewCommentView.as_view(), name='book-comment'),
+    path('update/comment/<int:pk>', NewCommentView.as_view(),
+         name='book-comment-update'),
     path('', BookViewSet.as_view({
         'get': 'list',
         'post': 'create',
@@ -22,6 +25,9 @@ urlpatterns = [
         'get': 'retrieve3',
         'post': 'destroy'
     }), name='book-deletepage'),
+    path('new-comment/<int:pk>/', CommentsViewSet.as_view({
+        'post': 'create'
+    }), name='book-new-comment'),
 
 
 

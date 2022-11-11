@@ -53,7 +53,7 @@
 
 
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Post</button>
+                <button class="btn btn-outline-info" type="submit">Update</button>
             </div>
 
 
@@ -73,10 +73,6 @@ $(document).ready(function() {
           var html2=''
           var html3=''
           var authors = []
-          $('#btitle').val(data.data.title);
-          $('#bstatus').val(data.data.status);
-          $('#btype').val(data.data.type)
-          $('#blocation').val(data.data.location)
           $(data.data2).each(function(index,value){
             if(data.data.owner==value.id){
               html1+="<option value="+value.id+" selected>" + value.full_name + "</option>"
@@ -103,6 +99,10 @@ $(document).ready(function() {
           $(data.data.author).each(function(index,value){
             authors.push(value.id)
           })
+          $('#btitle').val(data.data.title);
+          $('#bstatus').val(data.data.status);
+          $('#btype').val(data.data.type)
+          $('#blocation').val(data.data.location)
           $("#bowner").append(html1)
           $("#bcheck").append(html2)
           $('#bauthor').append(html3)

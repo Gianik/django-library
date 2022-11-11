@@ -16,3 +16,11 @@ class BookUpdateView(TemplateView):
 
 class BookDeleteView(TemplateView):
     template_name = 'books/book_delete_form.html'
+
+
+class NewCommentView(TemplateView):
+    template_name = 'books/comment_form.html'
+
+
+class UpdateCommentView(TemplateView):
+    template_name = 'books/comment_form.html'

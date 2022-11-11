@@ -11,3 +11,10 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     def get_full_name(self, obj):
         return '{} {}'.format(obj.first_name, obj.last_name)
+
+
+class UserIdSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id']
