@@ -62,7 +62,7 @@ $(document).ready(function() {
                 var y = date.getFullYear()
                 html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"+
                         "<br><a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-dark btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#6c757d;'+'color:'+'white'+">Update Comment</button></a>  "+
-                        "<a   href="+'#'+"><button type="+'button'+" class="+'btn btn-danger btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#dc3545;'+'color:'+'white'+ "  >Delete Comment</button></a><hr>"
+                        "<a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-danger btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#dc3545;'+'color:'+'white'+ "  >Delete Comment</button></a><hr>"
             })
 
             $("#div1").append(html)

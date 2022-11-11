@@ -1,0 +1,65 @@
+{% extends "partials/base.html"%}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST" novalidate id='update_comment'>
+            {% csrf_token %}
+
+            <fieldset class="form-group"> 
+                <legend class="border-bottom mb-4">Update Comment</legend>
+            </fieldset>
+            <label for="bcomment">Comment Text:</label>
+            <input type="text" id="bcomment" name="bcomment" value=""><br><br>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Post</button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+{% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function(){
+var pk = {{pk}}
+  $.ajax({
+    url: "http://127.0.0.1:8000/book/new-comment/"+pk,
+    type: "GET",
+    dataType: "json",
+    success: (data) => {
+      console.log(data)
+      var html='';
+      $('#bcomment').val(data.text)
+      
+
+    },
+    error: (error) => {
+      console.log(error);
+    }
+  });
+  $("#update_comment").submit(function(event){
+    event.preventDefault();
+    $.ajax({
+        url:"http://127.0.0.1:8000/book/update-comment/"+pk+"/",
+        type:"POST",
+        dataType:"JSON",
+        data:{
+            text:$('#bcomment').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success:()=>{
+            window.location.replace("http://127.0.0.1:8000/")
+        },
+        error:(error)=>{
+            console.log(error)
+        },
+    });
+return false;
+});  
+
+})
+</script>
+{% endblock %}

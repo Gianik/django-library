@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDetailSerializer, BookUpdateSerializer, NewBookSerializer, NewCommentSerializer
+from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDetailSerializer, BookUpdateSerializer, NewBookSerializer, NewCommentSerializer, CommentsSerializer
 from .models import Books, Comments
 from users.models import User
 from django.shortcuts import get_object_or_404
@@ -61,8 +61,8 @@ class BookViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        article = get_object_or_404(Books, pk=pk)
-        article.delete()
+        book = get_object_or_404(Books, pk=pk)
+        book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -75,3 +75,24 @@ class CommentsViewSet(viewsets.ViewSet):
             serializer.save(book=books, author=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        comment = get_object_or_404(Comments, pk=pk)
+        users = User.objects.all()
+        serializer = CommentsSerializer(comment)
+        return JsonResponse(serializer.data, safe=False, status=200)
+
+    # consider retrieve2 for after delete redirect
+
+    def update(self, request, pk=None):
+        comment = get_object_or_404(Comments, pk=pk)
+        serializer = CommentsSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        comment = get_object_or_404(Comments, pk=pk)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

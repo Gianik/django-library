@@ -1,0 +1,56 @@
+{% extends "partials/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" id="comment_delete">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Delete Post</legend>
+                <h2 id="atitle"></h2>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function(){
+var pk = {{pk}}
+  $.ajax({
+    url: "http://127.0.0.1:8000/book/new-comment/"+pk,
+    type: "GET",
+    dataType: "json",
+    success: (data) => {
+      console.log(data)
+      var html="<h5> Are you sure you want to delete the post " + data.text + " ?</h5>";
+      
+        $('#atitle').append(html);
+    },
+    error: (error) => {
+      console.log(error);
+    }
+  });
+  $("#comment_delete").submit(function(event){
+    event.preventDefault();
+    $.ajax({
+        url:"http://127.0.0.1:8000/book/delete-comment/"+pk+"/",
+        type:"POST",
+        dataType:"JSON",
+        data:{
+            text:$('#bcomment').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success:()=>{
+            window.location.replace("http://127.0.0.1:8000/")
+        },
+        error:(error)=>{
+            console.log(error)
+        },
+    });
+return false;
+});  
+
+})
+</script>
+{% endblock %}

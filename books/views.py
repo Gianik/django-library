@@ -23,4 +23,8 @@ class NewCommentView(TemplateView):
 
 
 class UpdateCommentView(TemplateView):
-    template_name = 'books/comment_form.html'
+    template_name = 'books/comment_update_form.html'
+
+
+class UpdateCommentView(TemplateView):
+    template_name = 'books/comment_delete_form.html'
