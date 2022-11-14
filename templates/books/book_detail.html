@@ -30,6 +30,7 @@
 <script>
 $(document).ready(function() {
     var pk = {{pk}}
+
     $.ajax({
         type:"GET",
         url:'http://127.0.0.1:8000/book/book-detail/'+pk,

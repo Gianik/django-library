@@ -1,7 +1,7 @@
 from django.urls import path
 from .api import BookViewSet, CommentsViewSet
 from .views import NewBookView, BookDetailView, BookUpdateView, BookDeleteView, NewCommentView, UpdateCommentView
-
+from django.contrib.auth.decorators import login_required
 urlpatterns = [
     path('new/', NewBookView.as_view(), name='new-book'),
     path('detail/<int:pk>', BookDetailView.as_view(), name='book-detail'),
@@ -12,10 +12,10 @@ urlpatterns = [
          name='book-comment-update'),
     path('delete/comment/<int:pk>', UpdateCommentView.as_view(),
          name='book-comment-delete'),
-    path('', BookViewSet.as_view({
+    path('', login_required(BookViewSet.as_view({
         'get': 'list',
         'post': 'create',
-    }), name='book-list'),
+    })), name='book-list'),
     path('book-detail/<int:pk>', BookViewSet.as_view({
         'get': 'retrieve',
     }), name='book-detailset'),

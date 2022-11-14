@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-
+    var httpub = 'http://127.0.0.1:8000/book/'
 
 
 })
@@ -27,3 +27,16 @@ function homeList() {
         }
     });
 };
+function logout() {
+    $.ajax({
+        url: "http://127.0.0.1:8000/login-logout-user/",
+        type: 'GET',
+        sucess: (data) => {
+            // window.location.replace("http://127.0.0.1:8000/logout")
+            return true
+        },
+        error: (error) => {
+            console.log(error)
+        }
+    })
+}

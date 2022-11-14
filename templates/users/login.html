@@ -1,0 +1,60 @@
+{% extends "partials/base.html"%}
+{% block content %}
+
+    <div class="content-section">
+        <form  name='loginform' method="POST" id="loginform"  novalidate >
+            {% csrf_token %}
+
+            <fieldset class="form-group"> 
+                <legend class="border-bottom mb-4">Login</legend>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value=""><br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value=""><br><br>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit"  >Log in</button>
+
+            </div>
+
+        </form>
+        <div class="border-top pt-3">
+            {% comment %} <small class="text-muted">Don't Have An Account? <a class="ml-2" href="{% url 'blog-register' %}">Sign Up</a></small> {% endcomment %}
+        </div>
+
+    </div>
+
+{% endblock content %}
+{% block javascript %}
+<script>
+$(document).ready(function(){
+    var pk = {{pk}}
+    $("#loginform").submit(function(event){
+        console.log('test')
+
+        event.preventDefault();
+        $.ajax({
+            url:"http://127.0.0.1:8000/login-logout-user/",
+            type:"POST",
+            dataType:"JSON",
+            data:{
+                email:$('#email').val(),
+                password:$('#password').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success:()=>{
+                window.location.replace("http://127.0.0.1:8000/")
+            },
+            error:(error)=>{
+                console.log(error)
+            },
+        });
+    return false;
+});  
+    
+})
+
+
+</script>
+      
+{% endblock %}
