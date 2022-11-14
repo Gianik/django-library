@@ -5,8 +5,8 @@
         <div class="media-body">
             <div class="article-metadata">
             <small class="text-muted"></small>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'book-update' pk %}">Update</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'book-delete' pk %}">Delete</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" id="ub" href="{% url 'book-update' pk %}" hidden >Update</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" id="db" href="{% url 'book-delete' pk %}" hidden >Delete</a>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'book-comment' pk %}">New Comment</a>
             </div>
             <div class="article-metadata" id="div1">
@@ -34,39 +34,49 @@ $(document).ready(function() {
         type:"GET",
         url:'http://127.0.0.1:8000/book/book-detail/'+pk,
         success:(data)=>{
-            console.log(data.comments)
+            console.log(data)
             var html =''
             var html2=''
-            html+="<div class="+'article-metadata'+" ><h2 class="+'article-title'+">Title: " + data.title +"</h2> Author: "
-            $(data.author).each(function(index,value){
+            html+="<div class="+'article-metadata'+" ><h2 class="+'article-title'+">Title: " + data.data.title +"</h2> Author: "
+            $(data.data.author).each(function(index,value){
                 html+="<small class="+'text-muted'+"  >" + value.full_name + " </small>"
             })
-            if(!data.checked_out_by){
+            if(!data.data.checked_out_by){
                 html+="<p class="+'article-content'+">Checkout by: " + "None" + 
-                    "</p><p class="+'article-content'+">Owner:" + data.owner + "</p>" +
-                    "<p class="+'article-content'+">Location: " + data.location + "</p><p class="+'article-content'+">Status: " + data.status + "</p>" +
-                    "<p class="+'article-content'+">Type: " + data.type + "</p></div>"
+                    "</p><p class="+'article-content'+">Owner:" + data.data.owner + "</p>" +
+                    "<p class="+'article-content'+">Location: " + data.data.location + "</p><p class="+'article-content'+">Status: " + data.data.status + "</p>" +
+                    "<p class="+'article-content'+">Type: " + data.data.type + "</p></div>"
 
             }
             else{
-                html+="<p class="+'article-content'+">Checkout by: " + data.checked_out_by + 
-                    "</p><p class="+'article-content'+">Owner: " + data.owner + "</p>" +
-                    "<p class="+'article-content'+">Location: " + data.location + "</p><p class="+'article-content'+">Status: " + data.status + "</p>" +
-                    "<p class="+'article-content'+">Type: " + data.type + "</p></div>"
+                html+="<p class="+'article-content'+">Checkout by: " + data.data.checked_out_by + 
+                    "</p><p class="+'article-content'+">Owner: " + data.data.owner + "</p>" +
+                    "<p class="+'article-content'+">Location: " + data.data.location + "</p><p class="+'article-content'+">Status: " + data.data.status + "</p>" +
+                    "<p class="+'article-content'+">Type: " + data.data.type + "</p></div>"
 
             }
-            $(data.comments).each(function(index,value){
+            $(data.data.comments).each(function(index,value){
                 var date = new Date(value.date_updated)
                 var d = date.getDate()
                 var m = date.getMonth()+1
                 var y = date.getFullYear()
-                html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"+
+                if(data.data2.id==value.author.id){
+                    html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"+
                         "<br><a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-dark btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#6c757d;'+'color:'+'white'+">Update Comment</button></a>  "+
                         "<a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-danger btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#dc3545;'+'color:'+'white'+ "  >Delete Comment</button></a><hr>"
+                }
+                else{
+                    html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"
+                }
             })
 
             $("#div1").append(html)
             $("#div2").append(html2)
+
+            if(data.data2.full_name===data.data.owner){
+                $("#ub").removeAttr('hidden');
+                $("#db").removeAttr('hidden');
+            }
 
         },
         error:(error)=>{

@@ -6,7 +6,7 @@ from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDet
 from .models import Books, Comments
 from users.models import User
 from django.shortcuts import get_object_or_404
-from users.serializers import AuthorSerializer, UserIdSerializer
+from users.serializers import AuthorSerializer
 from users.models import User
 
 
@@ -15,7 +15,7 @@ class BookViewSet(viewsets.ViewSet):
     def list(self, request):
         books = Books.objects.all()
         serializer = BookListSerializer(books, many=True)
-        # user = UserIdSerializer(request.user)
+        # user = UserIdSerializer(request.user) test for passing userid along with the json data
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def create(self, request):
@@ -33,9 +33,9 @@ class BookViewSet(viewsets.ViewSet):
         queryset = Books.objects.all()
         book = get_object_or_404(queryset, pk=pk)
         users = User.objects.all()
+        user = AuthorSerializer(request.user)
         serializer = BookDetailSerializer(book)
-        # serializer2 = CommentsSerializer(book, many=True)
-        return JsonResponse(serializer.data, safe=False, status=200)
+        return JsonResponse({'data': serializer.data, 'data2': user.data}, safe=False, status=200)
 
     def retrieve2(self, request, pk=None):
         queryset = Books.objects.all()

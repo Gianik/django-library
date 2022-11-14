@@ -13,8 +13,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         return '{} {}'.format(obj.first_name, obj.last_name)
 
 
-class UserIdSerializer(serializers.ModelSerializer):
+# class UserIdSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = User
-        fields = ['id']
+#     class Meta:
+#         model = User
+#         fields = ['id']
