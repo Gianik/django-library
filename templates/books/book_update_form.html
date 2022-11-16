@@ -9,6 +9,9 @@
             <label for="btitle">Title:</label>
             <input type="text" id="btitle" name="btitle" value=""><br><br>
 
+            <label for="btags">Author:</label>
+            <input type="text" id="btags" name="btags" data-role="tagsinput"><br><br>
+
             <label for="bstatus">Status:</label>
 
             <select name="bstatus" id="bstatus">
@@ -46,10 +49,6 @@
             </select>
 
             <br />
-            <label for="bauthor">Author:</label>
-            
-            <select name="bauthor" id="bauthor" multiple>
-            </select>
 
 
             <div class="form-group">
@@ -72,7 +71,7 @@ $(document).ready(function() {
           var html1=''
           var html2=''
           var html3=''
-          var authors = []
+          console.log(data)
           $(data.data2).each(function(index,value){
             if(data.data.owner==value.id){
               html1+="<option value="+value.id+" selected>" + value.full_name + "</option>"
@@ -91,13 +90,9 @@ $(document).ready(function() {
             }
             
           })
-          $(data.data2).each(function(index,value){
- 
-            html3+="<option value="+value.id+" >" + value.full_name + "</option>"
-            
-          })
-          $(data.data.author).each(function(index,value){
-            authors.push(value.id)
+          $(data.data.author_tags).each(function(index,value){
+
+            $('#btags').tagsinput('add',value.author)
           })
           $('#btitle').val(data.data.title);
           $('#bstatus').val(data.data.status);
@@ -105,8 +100,7 @@ $(document).ready(function() {
           $('#blocation').val(data.data.location)
           $("#bowner").append(html1)
           $("#bcheck").append(html2)
-          $('#bauthor').append(html3)
-          $('#bauthor').val(authors);      
+          $('#btags').val(data.data.author_tags);      
         },
         error:(error)=>{
             console.log(error)
@@ -121,7 +115,7 @@ $(document).ready(function() {
           dataType:"JSON",
           data:{
               title:$('#btitle').val(),
-              author:$('#bauthor').val(),
+              author_tags:$('#btags').tagsinput('items'),
               status:$('#bstatus').val(),
               type:$('#btype').val(),
               location:$('#blocation').val(),

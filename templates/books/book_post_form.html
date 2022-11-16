@@ -8,6 +8,9 @@
             </fieldset>
             <label for="btitle">Title:</label>
             <input type="text" id="btitle" name="btitle"><br><br>
+
+            <label for="btags">Author:</label>
+            <input type="text" id="btags" name="btags" data-role="tagsinput"><br><br>
             <label for="bstatus">Status:</label>
 
             <select name="bstatus" id="bstatus">
@@ -35,10 +38,6 @@
             <br />
 
             <br />
-            <label for="bauthor">Author:</label>
-            
-            <select name="bauthor" id="bauthor" multiple>
-            </select>
 
 
             <div class="form-group">
@@ -58,11 +57,7 @@ $(document).ready(function(){
     type: "GET",
     dataType: "json",
     success: (data) => {
-      var html = ''
-      $(data).each(function(index,value){
-        html+="<option value="+value.id+" >" + value.full_name + "</option>"
-      })
-      $("#bauthor").append(html)
+
     },
     error: (error) => {
       console.log(error);
@@ -70,7 +65,8 @@ $(document).ready(function(){
   });
     $("#post_book").submit(function(event){
         event.preventDefault();
-        console.log($('#bowner').val())
+        console.log($('#btags').tagsinput('items'))
+        console.log($('#btags').val())
         $.ajax({
             url:"http://127.0.0.1:8000/book/",
             type:"POST",
@@ -81,7 +77,7 @@ $(document).ready(function(){
                 status:$('#bstatus').val(),
                 type:$('#btype').val(),
                 location:$('#blocation').val(),
-                owner:$('#bowner').val(),
+                author_tags:$('#btags').tagsinput('items'),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success:()=>{

@@ -1,6 +1,14 @@
 from rest_framework import serializers
-from .models import Books, Comments
+from .models import Books, Comments, Authors
 from users.serializers import AuthorSerializer
+from taggit.serializers import (TagListSerializerField, TaggitSerializer)
+
+
+class AuthorsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Authors
+        fields = ['author']
 
 
 class CommentsSerializer(serializers.ModelSerializer):
@@ -22,32 +30,27 @@ class NewCommentSerializer(serializers.ModelSerializer):
 
 class BookListSerializer(serializers.ModelSerializer):
 
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorsSerializer(read_only=True, many=True, required=False)
 
     class Meta:
         model = Books
-        fields = ['id', 'title', 'author']
-
-
-# class BookUserListSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Books
-#         fields = ['id', 'title']
+        fields = ['id', 'title', 'author_tags']
 
 
 class NewBookSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorsSerializer(read_only=True, many=True, required=False)
 
     class Meta:
         model = Books
-        fields = ['title', 'author', 'status', 'type', 'location', 'owner']
+        fields = ['title', 'status',
+                  'type', 'location', 'owner', 'author_tags']
 
 
 class BookDetailSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
     location = serializers.CharField(source='get_location_display')
     status = serializers.CharField(source='get_status_display')
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorsSerializer(read_only=True, many=True, required=False)
     comments = CommentsSerializer(read_only=True, many=True)
 
     class Meta:
@@ -67,7 +70,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class BookUpdateDetailSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorsSerializer(read_only=True, many=True, required=False)
 
     class Meta:
         model = Books
@@ -75,12 +78,12 @@ class BookUpdateDetailSerializer(serializers.ModelSerializer):
 
 
 class BookUpdateSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorsSerializer(read_only=True, many=True, required=False)
 
     class Meta:
         model = Books
-        fields = ['title', 'author', 'owner',
-                  'checked_out_by', 'status', 'type', 'location']
+        fields = ['title', 'owner',
+                  'checked_out_by', 'status', 'type', 'location', 'author_tags']
 
 
 class BookDeleteDetailSerializer(serializers.ModelSerializer):

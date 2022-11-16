@@ -39,8 +39,8 @@ $(document).ready(function() {
             var html =''
             var html2=''
             html+="<div class="+'article-metadata'+" ><h2 class="+'article-title'+">Title: " + data.data.title +"</h2> Author: "
-            $(data.data.author).each(function(index,value){
-                html+="<small class="+'text-muted'+"  >" + value.full_name + " </small>"
+            $(data.data.author_tags).each(function(index,value){
+                html+="<small class="+'text-muted'+"  >" + value.author + " </small>"
             })
             if(!data.data.checked_out_by){
                 html+="<p class="+'article-content'+">Checkout by: " + "None" + 

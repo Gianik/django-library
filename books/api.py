@@ -3,11 +3,12 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from django.http import HttpResponse, JsonResponse
 from .serializers import BookListSerializer, BookDetailSerializer, BookUpdateDetailSerializer, BookUpdateSerializer, NewBookSerializer, NewCommentSerializer, CommentsSerializer
-from .models import Books, Comments
+from .models import Books, Comments, Authors
 from users.models import User
 from django.shortcuts import get_object_or_404
 from users.serializers import AuthorSerializer
 from users.models import User
+import json
 
 
 class BookViewSet(viewsets.ViewSet):
@@ -19,12 +20,22 @@ class BookViewSet(viewsets.ViewSet):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def create(self, request):
+        auth = []
         serializer = NewBookSerializer(data=request.data)
         queryset = User.objects.all()
         authors = queryset.filter(id__in=request.POST.getlist('author[]'))
+        tags = request.POST.getlist('author_tags[]')
+        # loop to create the authors tag object if it does not exist yet
+        for tag in tags:
+            if not Authors.objects.filter(author=tag).exists():
+                Authors.objects.create(author=tag)
+        # loop to get the id of the authors object
+        for tag in tags:
+            auth_object = Authors.objects.get(author=tag)
+            auth.append(auth_object)
 
         if serializer.is_valid():
-            serializer.save(owner=request.user, author=authors)
+            serializer.save(owner=request.user, author_tags=auth)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -49,12 +60,21 @@ class BookViewSet(viewsets.ViewSet):
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def update(self, request, pk=None):
+        auth = []
         book = get_object_or_404(Books, pk=pk)
         serializer = BookUpdateSerializer(book, data=request.data)
-        queryset = User.objects.all()
-        authors = queryset.filter(id__in=request.POST.getlist('author[]'))
+        tags = request.POST.getlist('author_tags[]')
+        # loop to create the authors tag object if it does not exist yet
+        for tag in tags:
+            if not Authors.objects.filter(author=tag).exists():
+                Authors.objects.create(author=tag)
+        # loop to get the id of the authors object
+        for tag in tags:
+            auth_object = Authors.objects.get(author=tag)
+            auth.append(auth_object)
+
         if serializer.is_valid():
-            serializer.save(author=authors)
+            serializer.save(author_tags=auth)
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

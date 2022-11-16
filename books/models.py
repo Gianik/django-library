@@ -1,12 +1,16 @@
 from django.db import models
 from users.models import User
+from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
+
+
+class Authors(models.Model):
+    author = models.CharField(max_length=50)
 
 
 class Books(models.Model):
 
     title = models.CharField(max_length=100)
-    author = models.ManyToManyField(
-        User, related_name='book_authors')
     owner = models.ForeignKey(
         User, related_name='book_owner', null=True, blank=True, on_delete=models.CASCADE)
     checked_out_by = models.ForeignKey(
@@ -28,6 +32,7 @@ class Books(models.Model):
         (2, "Owner's Home"),
         (3, "In the Matrix"),
     ), default=1)
+    author_tags = models.ManyToManyField(Authors, null=True, blank=True)
 
     def __str__(self):
         return self.title
