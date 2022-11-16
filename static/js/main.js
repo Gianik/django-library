@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-    var httpub = 'http://127.0.0.1:8000/book/'
+
 
 
 })

@@ -1,0 +1,88 @@
+{% extends "partials/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST"  novalidate id='edit_profile' enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <fieldset class="form-group"> 
+                <legend class="border-bottom mb-4">Edit Profile</legend>
+            </fieldset>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value=""><br><br>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value=""><br><br>
+            <label for="avatar">Avatar:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*">
+            <p id='imagerror' style='color:red;display:none' > Uploaded file is not an image file </p>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update</button>
+
+            </div>
+
+
+        </form>
+    </div>
+{% endblock content %}
+{% block javascript %}
+<script>
+    $.ajax({
+        url: 'http://127.0.0.1:8000/profile-details/',
+        type: "GET",
+        dataType: "json",
+        success: (data) => {
+            console.log(data)
+            $('#first_name').val(data.first_name)
+            $('#last_name').val(data.last_name)
+        },
+        error:(error) => {
+
+        }
+    })
+
+
+
+
+    
+    $("#edit_profile").submit(function(event){
+        var is_Image = isImage(avatar.files[0])
+        console.log(avatar.files[0])
+        var formData = new FormData(this)
+        console.log(formData)
+        event.preventDefault();
+         if(is_Image===true){
+            $("#imagerror").hide();
+            console.log('image check true')
+            $.ajax({
+                url:"http://127.0.0.1:8000/profile-details/",
+                type:"POST",
+                dataType:"JSON",
+                data:formData,
+                processData: false,
+                contentType: false,
+                success:()=>{
+                    window.location.replace("http://127.0.0.1:8000/")
+                },
+                error:(error)=>{
+                    console.log(error)
+                },
+            });
+
+         }
+         else{
+            $("#imagerror").show();
+            return
+         }
+
+
+
+    return false;
+    })
+function isImage(file){
+    return file['type'].split('/')[0]=='image';
+}
+
+
+</script>
+
+
+{% endblock %}

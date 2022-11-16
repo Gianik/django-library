@@ -33,12 +33,6 @@
               <option value=3>In the Matrix</option>
             </select>
             <br />
-            <label for="bowner">Owner:</label>
-            
-            <select name="bowner" id="bowner">
-              <option selected > -- select an option -- </option>
-            
-            </select>
 
             <br />
             <label for="bauthor">Author:</label>
@@ -69,7 +63,6 @@ $(document).ready(function(){
         html+="<option value="+value.id+" >" + value.full_name + "</option>"
       })
       $("#bauthor").append(html)
-      $("#bowner").append(html)
     },
     error: (error) => {
       console.log(error);

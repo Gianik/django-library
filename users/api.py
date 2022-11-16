@@ -2,9 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.http import HttpResponse, JsonResponse
-from .serializers import AuthorSerializer
+from .serializers import AuthorSerializer, UserRegistrationSerializer, UserDetailsSerializer, UserProfileSerializer
 from .models import User
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
 
 
 class AuthorChoiceViewSet(viewsets.ViewSet):
@@ -16,6 +17,14 @@ class AuthorChoiceViewSet(viewsets.ViewSet):
 
 
 class UserViewSet(viewsets.ViewSet):
+
+    def user_register(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def log_in(self, request):
         email = request.POST['email']
@@ -32,3 +41,34 @@ class UserViewSet(viewsets.ViewSet):
 
         logout(request)
         return Response('successful logout')
+
+    def user_details(self, request):
+        serializer = UserDetailsSerializer(request.user)
+        return JsonResponse(serializer.data, safe=False, status=200)
+
+    def profile_details(self, request):
+        serializer = UserProfileSerializer(request.user)
+        return JsonResponse(serializer.data, safe=False, status=200)
+
+    def update_profile(self, request):
+        user = get_object_or_404(User, pk=request.user.id)
+
+        serializer = UserProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# authors separate database , tags
+# owner = request.user
+# remove owner in update form
+# make checkout a button similar to a like but only one is to one
+    # def update(self, request, pk=None):
+    #     book = get_object_or_404(Books, pk=pk)
+    #     serializer = BookUpdateSerializer(book, data=request.data)
+    #     queryset = User.objects.all()
+    #     authors = queryset.filter(id__in=request.POST.getlist('author[]'))
+    #     if serializer.is_valid():
+    #         serializer.save(author=authors)
+    #         return Response(serializer.data, status=200)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

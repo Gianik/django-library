@@ -1,0 +1,64 @@
+{% extends "partials/base.html" %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" id='avatarpic'  src="">
+        <div class="media-body">
+          <h2 id='flname' class="account-heading"></h2>
+          <p id='uemail' class="text-secondary"></p>
+        </div>
+      </div>
+      <h3>Owned Books:</h3>
+
+        <div id='div1' class="article-metadata">
+            <a href="#"><p class="text-secondary"></p></a>
+        </div>
+      <h3>My Borrowed Books:</h3>
+        <div id='div2' class="article-metadata">
+            <a  href="#"><p class="text-secondary"></p></a>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascript %}
+<script>
+//$(document).ready(function () {
+    $.ajax({
+        url: 'http://127.0.0.1:8000/detail',
+        type: "GET",
+        dataType: "json",
+        success: (data) => {
+            console.log(data)
+            var html1='';
+            var html2='';
+            $('#avatarpic').attr('src', data.avatar)
+            $('#flname').html("<h2  class="+'account-heading'+" >"+ data.full_name + "</h2>")
+            $('#uemail').html("<p  class="+'text-secondary'+" >"+ data.email + "</p>")
+            $(data.book_owner).each(function (index, value) {
+                html1 += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
+                $(value.author).each(function (index, value2) {
+                    html1 += "<a class=" + 'mr-2' + "  >" + value2.full_name + " </a>"
+                })
+                html1 += "</div>"
+            })
+            $(data.book_borrower).each(function (index, value) {
+                html2 += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
+                $(value.author).each(function (index, value2) {
+                    html2 += "<a class=" + 'mr-2' + "  >" + value2.full_name + " </a>"
+                })
+                html2 += "</div>"
+            })            
+            $("#div1").append(html1)
+            $("#div2").append(html2)
+            
+        },
+        error: (error) => {
+            console.log(error);
+        }
+    });
+
+
+//})
+</script>
+
+{% endblock %}

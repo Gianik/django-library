@@ -13,4 +13,15 @@ class LoginView(TemplateView):
 class LogoutView(TemplateView):
     template_name = 'users/logout.html'
 
+
+class RegisterView(TemplateView):
+    template_name = 'users/register.html'
+
+
+class DashboardView(TemplateView):
+    template_name = 'users/dashboard.html'
+
+
+class EditProfileView(TemplateView):
+    template_name = 'users/edit_profile.html'
 # Create your views here.
