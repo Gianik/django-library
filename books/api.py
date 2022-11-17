@@ -83,6 +83,24 @@ class BookViewSet(viewsets.ViewSet):
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def borrow_return_book(self, request, pk=None):
+        book = get_object_or_404(Books, pk=pk)
+        print(book.checked_out_by)
+        if not book.checked_out_by:
+            book.checked_out_by = request.user
+            book.save()
+            return Response('successful')
+
+        else:
+            if book.checked_out_by == request.user:
+                book.checked_out_by = None
+                book.save()
+                return Response('successful')
+
+                # if not the one who borrowed access this part for return
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class CommentsViewSet(viewsets.ViewSet):
 

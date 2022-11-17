@@ -27,6 +27,9 @@ urlpatterns = [
         'get': 'retrieve3',
         'post': 'destroy'
     }), name='book-deletepage'),
+    path('borrow-return/<int:pk>/', BookViewSet.as_view({
+        'get': 'borrow_return_book',
+    }), name='book-borrow-return'),
     path('new-comment/<int:pk>/', CommentsViewSet.as_view({
         'get': 'retrieve',
         'post': 'create'

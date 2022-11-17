@@ -32,7 +32,7 @@ class Books(models.Model):
         (2, "Owner's Home"),
         (3, "In the Matrix"),
     ), default=1)
-    author_tags = models.ManyToManyField(Authors, null=True, blank=True)
+    author_tags = models.ManyToManyField(Authors, blank=True)
 
     def __str__(self):
         return self.title

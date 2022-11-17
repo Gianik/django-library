@@ -8,8 +8,11 @@
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" id="ub" href="{% url 'book-update' pk %}" hidden >Update</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" id="db" href="{% url 'book-delete' pk %}" hidden >Delete</a>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'book-comment' pk %}">New Comment</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1"  style="color:white" id="bb" hidden >Borrow Book</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1"  style="color:white" id="rb" hidden >Return Book</a>
             </div>
             <div class="article-metadata" id="div1">
+            
             <h2 class="article-title"></h2>
             <small class="text-muted"></small>
             <p class="article-content"></p>
@@ -17,6 +20,8 @@
             <p class="article-content"></p>
             <p class="article-content"></p>
             <p class="article-content"></p>
+            </div>
+            <div class="article-metadata" id="div3">
             </div>
             <h3>Comments:</h3>
             <div class="article-metadata" id="div2">
@@ -30,7 +35,6 @@
 <script>
 $(document).ready(function() {
     var pk = {{pk}}
-
     $.ajax({
         type:"GET",
         url:'http://127.0.0.1:8000/book/book-detail/'+pk,
@@ -38,19 +42,21 @@ $(document).ready(function() {
             console.log(data)
             var html =''
             var html2=''
+            var html5=''
             html+="<div class="+'article-metadata'+" ><h2 class="+'article-title'+">Title: " + data.data.title +"</h2> Author: "
             $(data.data.author_tags).each(function(index,value){
                 html+="<small class="+'text-muted'+"  >" + value.author + " </small>"
             })
             if(!data.data.checked_out_by){
-                html+="<p class="+'article-content'+">Checkout by: " + "None" + 
-                    "</p><p class="+'article-content'+">Owner:" + data.data.owner + "</p>" +
+                $("#bb").removeAttr('hidden');
+                html5+="<p class="+'article-content'+" id="+'cb'+">Checkout by: " + "None" + 
+                    "</p><p class="+'article-content'+">Owner: " + data.data.owner + "</p>" +
                     "<p class="+'article-content'+">Location: " + data.data.location + "</p><p class="+'article-content'+">Status: " + data.data.status + "</p>" +
                     "<p class="+'article-content'+">Type: " + data.data.type + "</p></div>"
 
             }
             else{
-                html+="<p class="+'article-content'+">Checkout by: " + data.data.checked_out_by + 
+                html5+="<p class="+'article-content'+" id="+'cb'+" >Checkout by: " + data.data.checked_out_by + 
                     "</p><p class="+'article-content'+">Owner: " + data.data.owner + "</p>" +
                     "<p class="+'article-content'+">Location: " + data.data.location + "</p><p class="+'article-content'+">Status: " + data.data.status + "</p>" +
                     "<p class="+'article-content'+">Type: " + data.data.type + "</p></div>"
@@ -73,23 +79,70 @@ $(document).ready(function() {
 
             $("#div1").append(html)
             $("#div2").append(html2)
+            $("#div3").append(html5)
 
             if(data.data2.full_name===data.data.owner){
                 $("#ub").removeAttr('hidden');
                 $("#db").removeAttr('hidden');
             }
+            if(data.data2.full_name===data.data.checked_out_by){
+                $("#rb").removeAttr('hidden');
+            }
+            $("#rb").click(function(){
+                var html3=''
+                console.log('test1')
+                $.ajax({
+                    url: "http://127.0.0.1:8000/book/borrow-return/"+pk,
+                    type: 'GET',
+                    sucess: (data) => {
+                        console.log('test')
+
+ 
+                        
+                    },
+                    error: (error) => {
+                        console.log(error)
+                    }
+                })
+                console.log(data.data2.full_name)
+                $("#bb").removeAttr('hidden');
+                $("#rb").attr("hidden",true);
+                $('#cb').replaceWith("<p class="+'article-content'+" id="+'cb'+" >Checkout by: " + "None" + "</p>")
+            }),
+            $("#bb").click(function(){
+                var html4=''
+                console.log(data.data2.full_name)
+                console.log('test2')
+                $.ajax({
+                    url: "http://127.0.0.1:8000/book/borrow-return/"+pk,
+                    type: 'GET',
+                    sucess: (data) => {
+
+                    },  
+                    error: (error) => {
+                        console.log(error)
+                    }
+                })
+                console.log('test3')
+                $("#rb").removeAttr('hidden');
+                $("#bb").attr("hidden",true);
+                $('#cb').replaceWith("<p class="+'article-content'+" id="+'cb'+" >Checkout by: " + data.data2.full_name + "</p>")
+            })
+        
 
         },
         error:(error)=>{
             console.log(error)
-        }
+        },
+
     })
 
 
 
 
-});
 
+
+});
 </script>
       
 {% endblock %}

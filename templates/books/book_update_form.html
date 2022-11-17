@@ -43,16 +43,12 @@
             </select>
 
             <br />
-            <label for="bcheck">Checked out by:</label>
-            
-            <select name="bcheck" id="bcheck">
-            </select>
 
             <br />
 
 
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update</button>
+                <button class="btn btn-outline-info" type="submit">Update Book</button>
             </div>
 
 
@@ -81,15 +77,6 @@ $(document).ready(function() {
             }
             
           })
-          $(data.data2).each(function(index,value){
-            if(data.data.checked_out_by==value.id){
-              html2+="<option value="+value.id+" selected>" + value.full_name + "</option>"
-            }
-            else{
-              html2+="<option value="+value.id+" >" + value.full_name + "</option>"
-            }
-            
-          })
           $(data.data.author_tags).each(function(index,value){
 
             $('#btags').tagsinput('add',value.author)
@@ -99,7 +86,6 @@ $(document).ready(function() {
           $('#btype').val(data.data.type)
           $('#blocation').val(data.data.location)
           $("#bowner").append(html1)
-          $("#bcheck").append(html2)
           $('#btags').val(data.data.author_tags);      
         },
         error:(error)=>{
@@ -120,7 +106,6 @@ $(document).ready(function() {
               type:$('#btype').val(),
               location:$('#blocation').val(),
               owner:$('#bowner').val(),
-              checked_out_by:$('#bcheck').val(),
               csrfmiddlewaretoken: '{{ csrf_token }}'
           },
           success:()=>{
