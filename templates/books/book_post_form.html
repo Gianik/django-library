@@ -32,7 +32,7 @@
             
             <select name="blocation" id="blocation">
               <option value=1 >Exactus Office</option>
-              <option value=2 >Owner’s Home</option>
+              <option value=2 >Owner's Home</option>
               <option value=3>In the Matrix</option>
             </select>
             <br />
@@ -89,7 +89,16 @@ $(document).ready(function(){
         });
     return false;
 });  
+$("#btype").change(function () {
+  var val = $(this).val();
+  if(val==3){
+    $('#blocation').html("<option value=3 >In the Matrix</option>")
+  }
+  else{
+    $('#blocation').html("<option value=1 >Exactus Office</option><option value=2>Owner's Home</option>")
+  }
 
+})
 })
 </script>
 {% endblock %}
