@@ -42,14 +42,15 @@ var pk = {{pk}}
   });
   $("#update_comment").submit(function(event){
     event.preventDefault();
+    let data = {text:$('#bcomment').val(),}
     $.ajax({
         url:"http://127.0.0.1:8000/book/update-comment/"+pk+"/",
         type:"POST",
         dataType:"JSON",
-        data:{
-            text:$('#bcomment').val(),
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
+        data:data,
+        beforeSend: function (xhr){
+            xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+          },       
         success:()=>{
             window.location.replace("http://127.0.0.1:8000/")
         },

@@ -32,16 +32,20 @@ $(document).ready(function(){
     $("#loginform").submit(function(event){
         console.log('test')
 
+        let data= {
+            email:$('#email').val(),
+            password:$('#password').val(),
+        }
+
         event.preventDefault();
         $.ajax({
             url:"http://127.0.0.1:8000/login-logout-user/",
             type:"POST",
             dataType:"JSON",
-            data:{
-                email:$('#email').val(),
-                password:$('#password').val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
+            data:data,
+            beforeSend: function (xhr){
+                xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+              },
             success:()=>{
                 window.location.replace("http://127.0.0.1:8000/")
             },

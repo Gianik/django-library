@@ -25,17 +25,20 @@
 <script>
 $(document).ready(function(){
     var pk = {{pk}}
+    let data ={
+        text:$('#bcomment').val(),
+        book:pk,
+    }
     $("#post_comment").submit(function(event){
         event.preventDefault();
         $.ajax({
             url:"http://127.0.0.1:8000/book/new-comment/"+pk+"/",
             type:"POST",
             dataType:"JSON",
-            data:{
-                text:$('#bcomment').val(),
-                book:pk,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
+            data:data,
+            beforeSend: function (xhr){
+                xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+              },
             success:()=>{
                 window.location.replace("http://127.0.0.1:8000/")
             },

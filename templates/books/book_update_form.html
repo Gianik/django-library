@@ -83,18 +83,20 @@ $(document).ready(function() {
     })
     $("#update_book").submit(function(event){
       event.preventDefault();
-      console.log($('#bauthor').val())
+      let data ={
+        title:$('#btitle').val(),
+        author_tags:$('#btags').tagsinput('items'),
+        status:$('#bstatus').val(),
+        type:$('#btype').val(),
+        location:$('#blocation').val(),
+      }
       $.ajax({
           url:'http://127.0.0.1:8000/book/update/detail/'+pk+"/",
           type:"POST",
           dataType:"JSON",
-          data:{
-              title:$('#btitle').val(),
-              author_tags:$('#btags').tagsinput('items'),
-              status:$('#bstatus').val(),
-              type:$('#btype').val(),
-              location:$('#blocation').val(),
-              csrfmiddlewaretoken: '{{ csrf_token }}'
+          data:data,
+          beforeSend: function (xhr){
+            xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
           },
           success:()=>{
               window.location.replace("http://127.0.0.1:8000/book/detail/"+pk)

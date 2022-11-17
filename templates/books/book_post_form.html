@@ -64,20 +64,21 @@ $(document).ready(function(){
   });
     $("#post_book").submit(function(event){
         event.preventDefault();
-        console.log($('#btags').tagsinput('items'))
-        console.log($('#btags').val())
+      let data={  
+        title:$('#btitle').val(),
+        author:$('#bauthor').val(),
+        status:$('#bstatus').val(),
+        type:$('#btype').val(),
+        location:$('#blocation').val(),
+        author_tags:$('#btags').tagsinput('items'),
+      }
         $.ajax({
             url:"http://127.0.0.1:8000/book/",
             type:"POST",
             dataType:"JSON",
-            data:{
-                title:$('#btitle').val(),
-                author:$('#bauthor').val(),
-                status:$('#bstatus').val(),
-                type:$('#btype').val(),
-                location:$('#blocation').val(),
-                author_tags:$('#btags').tagsinput('items'),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
+            data:data,
+            beforeSend: function (xhr){
+              xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
             },
             success:()=>{
                 window.location.replace("http://127.0.0.1:8000/")

@@ -36,20 +36,23 @@
     $(document).ready(function(){
         var pk = {{pk}}
         $("#registerform").submit(function(event){
-            console.log('test')
+
+            let data={
+                email:$('#email').val(),
+                first_name:$('#fname').val(),
+                last_name:$('#lname').val(),
+                password:$('#password1').val(),
+            }
     
             event.preventDefault();
             $.ajax({
                 url:"http://127.0.0.1:8000/register-user/",
                 type:"POST",
                 dataType:"JSON",
-                data:{
-                    email:$('#email').val(),
-                    first_name:$('#fname').val(),
-                    last_name:$('#lname').val(),
-                    password:$('#password1').val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
+                data:data,
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+                  },
                 success:()=>{
                     window.location.replace("http://127.0.0.1:8000/login/")
                 },
