@@ -74,8 +74,7 @@ class BookUpdateDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Books
-        fields = ['id', 'location', 'status',
-                  'owner', 'type', 'title', 'author_tags']
+        fields = ['id', 'location', 'status', 'type', 'title', 'author_tags']
 
 
 class BookUpdateSerializer(serializers.ModelSerializer):
@@ -83,8 +82,8 @@ class BookUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Books
-        fields = ['title', 'owner',
-                  'checked_out_by', 'status', 'type', 'location', 'author_tags']
+        fields = ['title', 'checked_out_by', 'status',
+                  'type', 'location', 'author_tags']
 
 
 class BookDeleteDetailSerializer(serializers.ModelSerializer):

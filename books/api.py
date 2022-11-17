@@ -16,14 +16,12 @@ class BookViewSet(viewsets.ViewSet):
     def list(self, request):
         books = Books.objects.all()
         serializer = BookListSerializer(books, many=True)
-        # user = UserIdSerializer(request.user) test for passing userid along with the json data
+
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def create(self, request):
         auth = []
         serializer = NewBookSerializer(data=request.data)
-        queryset = User.objects.all()
-        authors = queryset.filter(id__in=request.POST.getlist('author[]'))
         tags = request.POST.getlist('author_tags[]')
         # loop to create the authors tag object if it does not exist yet
         for tag in tags:
@@ -49,10 +47,8 @@ class BookViewSet(viewsets.ViewSet):
     def retrieve2(self, request, pk=None):
         queryset = Books.objects.all()
         book = get_object_or_404(queryset, pk=pk)
-        users = User.objects.all()
         serializer = BookUpdateDetailSerializer(book)
-        serializer2 = AuthorSerializer(users, many=True)
-        return JsonResponse({'data': serializer.data, 'data2': serializer2.data}, safe=False, status=200)
+        return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
     def retrieve3(self, request, pk=None):
         book = get_object_or_404(Books, pk=pk)

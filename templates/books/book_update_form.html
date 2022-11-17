@@ -33,14 +33,10 @@
             
             <select name="blocation" id="blocation">
               <option value=1 >Exactus Office</option>
-              <option value=2 >Owner’s Home</option>
-              <option value=3>In the Matrix</option>
+              <option value=2 >Owner's Home</option>
             </select>
             <br />
-            <label for="bowner">Owner:</label>
-            
-            <select name="bowner" id="bowner">
-            </select>
+
 
             <br />
 
@@ -68,15 +64,9 @@ $(document).ready(function() {
           var html2=''
           var html3=''
           console.log(data)
-          $(data.data2).each(function(index,value){
-            if(data.data.owner==value.id){
-              html1+="<option value="+value.id+" selected>" + value.full_name + "</option>"
-            }
-            else{
-              html1+="<option value="+value.id+" >" + value.full_name + "</option>"
-            }
-            
-          })
+          if(data.data.location==3){
+            $('#blocation').html("<option value=3 >In the Matrix</option>")
+          }
           $(data.data.author_tags).each(function(index,value){
 
             $('#btags').tagsinput('add',value.author)
@@ -85,7 +75,6 @@ $(document).ready(function() {
           $('#bstatus').val(data.data.status);
           $('#btype').val(data.data.type)
           $('#blocation').val(data.data.location)
-          $("#bowner").append(html1)
           $('#btags').val(data.data.author_tags);      
         },
         error:(error)=>{
@@ -105,7 +94,6 @@ $(document).ready(function() {
               status:$('#bstatus').val(),
               type:$('#btype').val(),
               location:$('#blocation').val(),
-              owner:$('#bowner').val(),
               csrfmiddlewaretoken: '{{ csrf_token }}'
           },
           success:()=>{
@@ -117,7 +105,16 @@ $(document).ready(function() {
       });
   return false;
 });
+$("#btype").change(function () {
+  var val = $(this).val();
+  if(val==3){
+    $('#blocation').html("<option value=3 >In the Matrix</option>")
+  }
+  else{
+    $('#blocation').html("<option value=1 >Exactus Office</option><option value=2>Owner's Home</option>")
+  }
 
+})
 
 
 
