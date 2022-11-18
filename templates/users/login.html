@@ -31,43 +31,45 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-$(document).ready(function(){
+
     var emailvalCheck = false
     var pasvalidCheck = false
     $("#loginform").submit(function(event){
         event.preventDefault();
         valEmail($('#email').val())
         valPass(password:$('#password').val())
-        let data= {
-            email:$('#email').val(),
-            password:$('#password').val(),
-        }
+        if(emailvalCheck===true&&pasvalidCheck===true){
+            let data= {
+                email:$('#email').val(),
+                password:$('#password').val(),
+            }
 
-        
-        $.ajax({
-            url:http+"/login-logout-user/",
-            type:"POST",
-            dataType:"JSON",
-            data:data,
-            beforeSend: function (xhr){
-                xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-              },
-            success:()=>{
-                $('#erremail').hide()
-                window.location.replace(http+"/")
-            },
-            error:(error)=>{
-                console.log(error)
-                if(error.status=404){
-                    $('#erremail').show()
-                    $("#erremail").html("User not found please check your email and password or register an account")
-                }
-            },
-        });
+            
+            $.ajax({
+                url:http+"/login-logout-user/",
+                type:"POST",
+                dataType:"JSON",
+                data:data,
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+                },
+                success:()=>{
+                    $('#erremail').hide()
+                    window.location.replace(http+"/")
+                },
+                error:(error)=>{
+                    console.log(error)
+                    if(error.status=404){
+                        $('#erremail').show()
+                        $("#erremail").html("User not found please check your email and password or register an account")
+                    }
+                },
+            });
+        }
     return false;
-});  
+    });  
     
-})
+
 function valEmail(email){
     let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
     if(email.trim().length ===0){
@@ -92,7 +94,7 @@ function valEmail(email){
     $('#erremail').hide()
     return true
 }
-function valPass(pass1,pass2){
+function valPass(pass1){
     if(pass1.trim().length ===0){
         $('#errpass').show()
         $("#errpass").html("Password cannot be empty")

@@ -8,12 +8,14 @@
                 <legend class="border-bottom mb-4">Edit Profile</legend>
             </fieldset>
             <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" value=""><br><br>
+            <input type="text" id="first_name" name="first_name" value=""><br>
+            <p id="errfn" style='color:red;display:none'></p>
             <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" value=""><br><br>
+            <input type="text" id="last_name" name="last_name" value=""><br>
+            <p id="errln" style='color:red;display:none'></p>
             <label for="avatar">Avatar:</label>
             <input type="file" id="avatar" name="avatar" accept="image/*">
-            <p id='imagerror' style='color:red;display:none' > Uploaded file is not an image file </p>
+            <p id='imagerror' style='color:red;display:none' ></p>
             <div class="form-group">
                 <button class="btn btn-outline-warning" type="submit">Update Profile</button>
 
@@ -25,6 +27,8 @@
 {% endblock content %}
 {% block javascript %}
 <script>
+    let namelvalCheck = false
+    let imagevalCheck = false
     $.ajax({
         url: http+'/profile-details/',
         type: "GET",
@@ -39,19 +43,24 @@
         }
     })
 
-
-
-
     
     $("#edit_profile").submit(function(event){
-        var is_Image = isImage(avatar.files[0])
-        console.log(avatar.files[0])
-        var formData = new FormData(this)
-        console.log(formData)
         event.preventDefault();
-         if(is_Image===true){
-            $("#imagerror").hide();
-            console.log('image check true')
+        var formData = new FormData(this)
+        //formData.set('first_name','test')
+        //console.log(formData)
+        //return
+        //
+        if(!avatar.files.length==0){
+            isImage(avatar.files[0])
+            valNames($('#first_name').val(),$('#last_name').val())
+
+            var fn = formatString($('#first_name').val())
+            var ln = formatString($('#last_name').val())
+            formData.set('first_name',fn)
+            formData.set('last_name',ln)
+
+         if(imagevalCheck===true&&namelvalCheck===true){
             $.ajax({
                 url:"http://127.0.0.1:8000/profile-details/",
                 type:"POST",
@@ -68,19 +77,99 @@
             });
 
          }
-         else{
-            $("#imagerror").show();
-            return
-         }
+        }
+        else{
+            console.log('test')
+            console.log(namelvalCheck)
+            valNames($('#first_name').val(),$('#last_name').val())
+            if(namelvalCheck===true){
+                console.log('test')
+                
+
+                var fn = formatString($('#first_name').val())
+                var ln = formatString($('#last_name').val())
+                formData.set('first_name',fn)
+                formData.set('last_name',ln)
+                $.ajax({
+                    url:"http://127.0.0.1:8000/profile-details/",
+                    type:"POST",
+                    dataType:"JSON",
+                    data:formData, // csrf token is part of the formdata
+                    processData: false,
+                    contentType: false,
+                    success:()=>{
+                        window.location.replace(http+"/dashboard")
+                    },
+                    error:(error)=>{
+                        console.log(error)
+                    },
+                });
+            }
+        }
 
 
 
     return false;
     })
 function isImage(file){
-    return file['type'].split('/')[0]=='image';
-}
 
+
+    if(!file['type'].split('/')[0]=='image'){
+        $("#imagerror").show();
+        $("#imagerror").html("Uploaded file is not an image file")
+        imagevalCheck = false
+        return false
+    }
+    $("#imagerror").hide();
+    imagevalCheck = true
+    return true
+    
+}
+function valNames(fn,ln){
+    let regex = /^[a-z ,.'-]+$/i
+    if(fn.trim().length ===0 ){
+        $('#errfn').show()
+        $("#errfn").html("First Name cannot be empty")
+        namelvalCheck = false
+        return false
+    }
+    if(ln.trim().length ===0){
+        $('#errln').show()
+        $("#errln").html("Last Name cannot be empty")
+        namelvalCheck = false
+        return false
+    }
+    if(fn.length>80){
+        $('#errfn').show()
+        $("#errfn").html("First Name exceeds max length please try again")
+        namelvalCheck = false
+        return false
+    }
+    if(ln.length>80){
+        $('#errln').show()
+        $("#errln").html("Last Name exceeds max length please try again")
+        namelvalCheck = false
+        return false
+    }
+    if(!regex.test(fn)){
+        $('#errfn').show()
+        $("#errfn").html("Invalid First Name please try again ")
+        namelvalCheck = false
+        return false
+    }
+    if(!regex.test(ln)){
+        $('#errfn').show()
+        $("#errfn").html("Invalid Last Name please try again ")
+        namelvalCheck = false
+        return false
+    }
+    $('#errfn').hide()
+    $('#errln').hide()
+    namelvalCheck = true
+    return true
+ 
+
+}
 
 </script>
 
