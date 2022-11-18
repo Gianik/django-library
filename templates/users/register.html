@@ -2,6 +2,7 @@
 {% block content %}
 
     <div class="content-section">
+        <h5 id="err" style='color:red;text-align:center;display:none'></h5>
         <form  name='registerform' method="POST" id="registerform"  novalidate >
             {% csrf_token %}
 
@@ -78,7 +79,13 @@
                         if(error.status=400){
                             $('#erremail').show()
                             $("#erremail").html("Email already exists please try to register on another email")
+                            return
                         }
+                        else{
+                            $('#err').show()
+                            $("#err").html("Server error please refresh and try again")
+                        }
+
                     },
                 });
         }

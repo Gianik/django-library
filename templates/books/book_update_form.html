@@ -1,6 +1,7 @@
 {% extends "partials/base.html"%}
 {% block content %}
     <div class="content-section">
+      <h5 id="err" style='color:red;text-align:center;display:none'></h5>
         <form method="POST" novalidate id='update_book'>
             {% csrf_token %}
             <fieldset class="form-group"> 
@@ -81,7 +82,13 @@
           $('#btags').val(data.data.author_tags);      
         },
         error:(error)=>{
-            console.log(error)
+          if(error.status == 404){
+            window.location.replace(http+"/")
+          }
+          else{
+            $('#err').show()
+            $("#err").html("Server error please refresh and try again")
+          }
         }
     })
     $("#update_book").submit(function(event){
@@ -108,7 +115,8 @@
                 window.location.replace(http+"/book/detail/"+pk)
             },
             error:(error)=>{
-                console.log(error)
+              $('#err').show()
+              $("#err").html("Server error please refresh and try again")
             },
         });
     }

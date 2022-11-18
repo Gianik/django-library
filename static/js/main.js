@@ -2,7 +2,6 @@ var http = window.location.origin
 $(document).ready(function () {
 
 
-
 })
 function homeList() {
     $.ajax({
@@ -12,7 +11,7 @@ function homeList() {
         success: (data) => {
             var html = '';
             $(data).each(function (index, value) {
-                html += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
+                html += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + http + '/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
                 $(value.author_tags).each(function (index, value2) {
                     html += "<a class=" + 'mr-2' + "  >" + value2.author + " </a>"
                 })
@@ -23,7 +22,10 @@ function homeList() {
 
         },
         error: (error) => {
-            console.log(error);
+
+            $('#err').show()
+            $("#err").html("Server error please refresh and try again")
+
         }
     });
 };
@@ -32,6 +34,8 @@ function logout() {
         url: http + "/login-logout-user/",
         type: 'GET',
         sucess: (data) => {
+            $('#message').show()
+            $('#message').html('Successfully logged out')
             return true
         },
         error: (error) => {
@@ -44,3 +48,14 @@ function formatString(str) {
         .replace(/(\B)[^ ]*/g, match => (match.toLowerCase()))
         .replace(/^[^ ]/g, match => (match.toUpperCase()));
 }
+setTimeout(function () {
+    if ($('#message').length > 0) {
+        $('#message').hide();
+    }
+    if ($('#message2').length > 0) {
+        $('#message2').hide();
+    }
+    if ($('#message3').length > 0) {
+        $('#message3').hide();
+    }
+}, 3000);

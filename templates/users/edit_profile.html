@@ -1,6 +1,7 @@
 {% extends "partials/base.html" %}
 {% block content %}
     <div class="content-section">
+        <h5 id="err" style='color:red;text-align:center;display:none'></h5>
         <form method="POST"  novalidate id='edit_profile' enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -101,7 +102,10 @@
                         window.location.replace(http+"/dashboard")
                     },
                     error:(error)=>{
-                        console.log(error)
+                        
+                            $('#err').show()
+                            $("#err").html("Server error please refresh and try again")
+                        
                     },
                 });
             }

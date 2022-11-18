@@ -1,6 +1,7 @@
 {% extends "partials/base.html" %}
 {% block content %}
     <div class="content-section">
+      <h5 id="err" style='color:red;text-align:center;display:none'></h5>
         <form method="POST" id="comment_delete">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -27,7 +28,13 @@ var pk = {{pk}}
         $('#atitle').append(html);
     },
     error: (error) => {
-      console.log(error);
+      if(error.status == 404){
+        window.location.replace(http+"/")
+      }
+      else{
+        $('#err').show()
+        $("#err").html("Server error please refresh and try again")
+      }
     }
   });
   $("#comment_delete").submit(function(event){
@@ -45,7 +52,8 @@ var pk = {{pk}}
             window.location.replace("http://127.0.0.1:8000/")
         },
         error:(error)=>{
-            console.log(error)
+          $('#err').show()
+          $("#err").html("Server error please refresh and try again")
         },
     });
 return false;

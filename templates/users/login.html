@@ -8,7 +8,7 @@
 
             <fieldset class="form-group"> 
                 <legend class="border-bottom mb-4">Login</legend>
-                <h5 id="erremail" style='color:red;text-align:center;display:none'></h5>
+                <h5 id="err" style='color:red;text-align:center;display:none'></h5>
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" value=""><br>
                 <p id="erremail" style='color:red;display:none'></p>
@@ -33,12 +33,12 @@
 <script>
 
     var emailvalCheck = false
-    var pasvalidCheck = false
+    var passvalCheck = false
     $("#loginform").submit(function(event){
         event.preventDefault();
         valEmail($('#email').val())
-        valPass(password:$('#password').val())
-        if(emailvalCheck===true&&pasvalidCheck===true){
+        valPass($('#password').val())
+        if(emailvalCheck===true&&passvalCheck===true){
             let data= {
                 email:$('#email').val(),
                 password:$('#password').val(),
@@ -63,6 +63,10 @@
                         $('#erremail').show()
                         $("#erremail").html("User not found please check your email and password or register an account")
                     }
+                    else{
+                        $('#err').show()
+                        $("#err").html("Server error please refresh and try again")
+                    }
                 },
             });
         }
@@ -75,12 +79,6 @@ function valEmail(email){
     if(email.trim().length ===0){
         $('#erremail').show()
         $("#erremail").html("Empty email input please input your email properly.")
-        emailvalCheck = false
-        return false
-    }
-    if(email.length>500){
-        $('#erremail').show()
-        $("#erremail").html("Email exceeds max length please input another email.")
         emailvalCheck = false
         return false
     }
@@ -98,24 +96,6 @@ function valPass(pass1){
     if(pass1.trim().length ===0){
         $('#errpass').show()
         $("#errpass").html("Password cannot be empty")
-        passvalCheck = false
-        return false
-    }
-    if(pass1.length<8){
-        $('#errpass').show()
-        $("#errpass").html("Password should at least be 8 charachters")
-        passvalCheck = false
-        return false
-    }
-    if(pass1.length>4096){
-        $('#errpass').show()
-        $("#errpass").html("Password exceeds max length please put another password")
-        passvalCheck = false
-        return false
-    }
-    if(pass1.search(/[a-zA-Z]/) == -1){
-        $('#errpass').show()
-        $("#errpass").html("Password cannot all be numeric")
         passvalCheck = false
         return false
     }

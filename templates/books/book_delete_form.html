@@ -1,6 +1,7 @@
 {% extends "partials/base.html" %}
 {% block content %}
     <div class="content-section">
+        <h5 id="err" style='color:red;text-align:center;display:none'></h5>
         <form method="POST" id="book_delete">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -26,7 +27,13 @@
                 $('#atitle').append(html)
             },
             error:(error)=>{
-                console.log(error)
+                if(error.status == 404){
+                    window.location.replace(http+"/")
+                }
+                else{
+                    $('#err').show()
+                    $("#err").html("Server error please refresh and try again")
+                }
             }
         })
         $("#book_delete").submit(function(event){
@@ -41,10 +48,11 @@
                     xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
                   },
                 success:()=>{
-                    window.location.replace("http://127.0.0.1:8000/")
+                    window.location.replace(http+"/")
                 },
                 error:(error)=>{
-                    console.log(error)
+                        $('#err').show()
+                        $("#err").html("Server error please refresh and try again")
                 },
             });
             return false;
