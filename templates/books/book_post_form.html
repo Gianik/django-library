@@ -10,7 +10,8 @@
             <input type="text" id="btitle" name="btitle"><br><br>
 
             <label for="btags">Author:</label>
-            <input type="text" id="btags" name="btags" data-role="tagsinput"><br><br>
+            <input type="text" id="btags" name="btags" data-role="tagsinput"><br>
+            <p class="text-info">-Please Press Tab Or , To Add Another Author.</p>
             <label for="bstatus">Status:</label>
 
             <select name="bstatus" id="bstatus">
@@ -22,7 +23,7 @@
             <br />
             <label for="btype">Type:</label>
 
-            <select name="btype" id="btype">
+            <select name="btype" id="btype" >
               <option value=1 >Hardcover</option>
               <option value=2 >Paperback</option>
               <option value=3>Digital Copy</option>
@@ -40,7 +41,7 @@
 
 
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">ADD BOOK</button>
+                <button class="btn btn-outline-success" type="submit">ADD BOOK</button>
             </div>
 
 
@@ -51,17 +52,7 @@
 {% block javascript %}
 <script>
 $(document).ready(function(){
-  $.ajax({
-    url: 'http://127.0.0.1:8000/authors',
-    type: "GET",
-    dataType: "json",
-    success: (data) => {
 
-    },
-    error: (error) => {
-      console.log(error);
-    }
-  });
     $("#post_book").submit(function(event){
         event.preventDefault();
       let data={  
@@ -73,7 +64,7 @@ $(document).ready(function(){
         author_tags:$('#btags').tagsinput('items'),
       }
         $.ajax({
-            url:"http://127.0.0.1:8000/book/",
+            url:http+"/book/",
             type:"POST",
             dataType:"JSON",
             data:data,

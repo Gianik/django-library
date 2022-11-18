@@ -8,18 +8,25 @@
             <fieldset class="form-group"> 
                 <legend class="border-bottom mb-4">Register</legend>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value=""><br><br>
+                <input type="email" id="email" name="email" value=""><br>
+                <p id="erremail" style='color:red;display:none'></p>
+                <br>
                 <label for="fname">First Name:</label>
-                <input type="text" id="fname" name="fname" value=""><br><br>
+                <input type="text" id="fname" name="fname" value=""><br>
+                <p id="errfn" style='color:red;display:none'></p>
                 <label for="lname">Last Name:</label>
-                <input type="text" id="lname" name="lname" value=""><br><br>
+                <input type="text" id="lname" name="lname" value=""><br>
+                <p id="errln" style='color:red;display:none'></p>
                 <label for="password1">Password 1:</label>
                 <input type="password" id="password1" name="password1" value=""><br><br>
                 <label for="password2">Password 2:</label>
                 <input type="password" id="password2" name="password2" value=""><br><br>
+                <p id="errpass" style='color:red;display:none'></p>
+                <p class="text-danger">-Your password cannot be entirely numeric.</p>
+                <p class="text-danger">-Your password must contain at least 8 characters.</p>
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit"  >Register</button>
+                <button class="btn btn-outline-success" type="submit"  >Register</button>
 
             </div>
 
@@ -33,37 +40,160 @@
 {% endblock content %}
 {% block javascript %}
 <script>
+    let emailvalCheck = false
+    let passvalCheck = false
+    let namelvalCheck = false
     $(document).ready(function(){
-        var pk = {{pk}}
         $("#registerform").submit(function(event){
-
-            let data={
-                email:$('#email').val(),
-                first_name:$('#fname').val(),
-                last_name:$('#lname').val(),
-                password:$('#password1').val(),
-            }
-    
             event.preventDefault();
-            $.ajax({
-                url:"http://127.0.0.1:8000/register-user/",
-                type:"POST",
-                dataType:"JSON",
-                data:data,
-                beforeSend: function (xhr){
-                    xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-                  },
-                success:()=>{
-                    window.location.replace("http://127.0.0.1:8000/login/")
-                },
-                error:(error)=>{
-                    console.log(error)
-                },
-            });
+            valEmail($('#email').val())
+            valPass($('#password1').val(),$('#password2').val());
+            valNames($('#fname').val(),$('#lname').val());
+            if(emailvalCheck === true && passvalCheck === true && namelvalCheck === true){
+                var fn = formatString($('#fname').val())
+                var ln = formatString($('#lname').val())
+                let data={
+                    email:$('#email').val(),
+                    first_name:fn,
+                    last_name:ln,
+                    password:$('#password1').val(),
+                }
+
+                
+                
+
+                $.ajax({
+                    url:http+"/register-user/",
+                    type:"POST",
+                    dataType:"JSON",
+                    data:data,
+                    beforeSend: function (xhr){
+                        xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+                    },
+                    success:()=>{
+                        window.location.replace(http+"/login/")
+                    },
+                    error:(error)=>{
+                        console.log(error)
+                        if(error.status=400){
+                            $('#erremail').show()
+                            $("#erremail").html("Email already exists please try to register on another email")
+                        }
+                    },
+                });
+        }
         return false;
     });  
         
     })
+    function valEmail(email){
+        let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+        if(email.trim().length ===0){
+            $('#erremail').show()
+            $("#erremail").html("Empty email input please input your email properly.")
+            emailvalCheck = false
+            return false
+        }
+        if(email.length>500){
+            $('#erremail').show()
+            $("#erremail").html("Email exceeds max length please input another email.")
+            emailvalCheck = false
+            return false
+        }
+        if(regex.test(email)){
+            emailvalCheck = true
+        }
+        else{
+            $('#erremail').show()
+            $("#erremail").html("Invalid Email format please input a proper email.")
+            emailvalCheck = false
+            return false
+        }
+        $('#erremail').hide()
+        return true
+    }
+    function valPass(pass1,pass2){
+        if(pass1.trim().length ===0){
+            $('#errpass').show()
+            $("#errpass").html("Password 1 and 2 cannot be empty")
+            passvalCheck = false
+            return false
+        }
+        if(pass1.length<8){
+            $('#errpass').show()
+            $("#errpass").html("Password 1 and 2 should at least be 8 charachters")
+            passvalCheck = false
+            return false
+        }
+        if(pass1.length>4096){
+            $('#errpass').show()
+            $("#errpass").html("Password exceeds max length please put another password")
+            passvalCheck = false
+            return false
+        }
+        if(pass1.search(/[a-zA-Z]/) == -1){
+            $('#errpass').show()
+            $("#errpass").html("Password cannot all be numeric")
+            passvalCheck = false
+            return false
+        }
+        if(pass1!==pass2){
+            $('#errpass').show()
+            $("#errpass").html("Password 1 does not equal to Password 2")
+            passvalCheck = false
+            return false
+        }
+        $('#errpass').hide()
+        passvalCheck = true
+        return true
+
+    }
+    function valNames(fn,ln){
+        let regex = /^[a-z ,.'-]+$/i
+        if(fn.trim().length ===0 ){
+            $('#errfn').show()
+            $("#errfn").html("First Name cannot be empty")
+            namelvalCheck = false
+            return false
+        }
+        if(ln.trim().length ===0){
+            $('#errln').show()
+            $("#errln").html("Last Name cannot be empty")
+            namelvalCheck = false
+            return false
+        }
+        if(fn.length>80){
+            $('#errfn').show()
+            $("#errfn").html("First Name exceeds max length please try again")
+            namelvalCheck = false
+            return false
+        }
+        if(ln.length>80){
+            $('#errln').show()
+            $("#errln").html("Last Name exceeds max length please try again")
+            namelvalCheck = false
+            return false
+        }
+        if(!regex.test(fn)){
+            $('#errfn').show()
+            $("#errfn").html("Invalid First Name please try again ")
+            namelvalCheck = false
+            return false
+        }
+        if(!regex.test(ln)){
+            $('#errfn').show()
+            $("#errfn").html("Invalid Last Name please try again ")
+            namelvalCheck = false
+            return false
+        }
+        $('#errfn').hide()
+        $('#errln').hide()
+        namelvalCheck = true
+        return true
+     
+
+    }
+
     
     
     </script>

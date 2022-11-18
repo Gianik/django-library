@@ -15,7 +15,7 @@
             <input type="file" id="avatar" name="avatar" accept="image/*">
             <p id='imagerror' style='color:red;display:none' > Uploaded file is not an image file </p>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update Profile</button>
+                <button class="btn btn-outline-warning" type="submit">Update Profile</button>
 
             </div>
 
@@ -26,7 +26,7 @@
 {% block javascript %}
 <script>
     $.ajax({
-        url: 'http://127.0.0.1:8000/profile-details/',
+        url: http+'/profile-details/',
         type: "GET",
         dataType: "json",
         success: (data) => {

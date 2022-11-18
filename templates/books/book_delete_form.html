@@ -19,7 +19,7 @@
         var pk = {{pk}}
         $.ajax({
             type:"GET",
-            url:'http://127.0.0.1:8000/book/book-delete/'+pk,
+            url:http+'/book/book-delete/'+pk,
             success:(data)=>{
                 console.log(data)
                 var html="<h2> Are you sure you want to delete the post " + data.title + "</h2>"
@@ -34,7 +34,7 @@
             event.preventDefault();
             let data ={}
             $.ajax({
-                url:"http://127.0.0.1:8000/book/book-delete/"+pk+"/",
+                url:http+"/book-delete/"+pk+"/",
                 type:"POST",
                 dataType:"JSON",
                 data:data,

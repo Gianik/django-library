@@ -11,7 +11,7 @@
             <label for="bcomment">Comment Text:</label>
             <input type="text" id="bcomment" name="bcomment" value=""><br><br>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Post Comment</button>
+                <button class="btn btn-outline-success" type="submit">Post Comment</button>
 
             </div>
 
@@ -23,16 +23,20 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-$(document).ready(function(){
+//$(document).ready(function(){
     var pk = {{pk}}
-    let data ={
-        text:$('#bcomment').val(),
-        book:pk,
-    }
+
     $("#post_comment").submit(function(event){
         event.preventDefault();
+        let data ={
+            text:$('#bcomment').val(),
+            book:pk,
+        }
+        console.log(window.location.origin)
+        console.log(http)
+        console.log(window.location.protocol)
         $.ajax({
-            url:"http://127.0.0.1:8000/book/new-comment/"+pk+"/",
+            url:http+"/book/new-comment/"+pk+"/",
             type:"POST",
             dataType:"JSON",
             data:data,
@@ -49,7 +53,7 @@ $(document).ready(function(){
     return false;
 });  
     
-})
+//})
 
 
 </script>

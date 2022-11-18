@@ -6,6 +6,7 @@ from .serializers import AuthorSerializer, UserRegistrationSerializer, UserDetai
 from .models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import make_password
 
 
 class AuthorChoiceViewSet(viewsets.ViewSet):
@@ -20,9 +21,9 @@ class UserViewSet(viewsets.ViewSet):
 
     def user_register(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
-
+        password = make_password(request.POST['password'])
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(password=password)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -58,17 +59,3 @@ class UserViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# authors separate database , tags
-# owner = request.user
-# remove owner in update form
-# make checkout a button similar to a like but only one is to one
-    # def update(self, request, pk=None):
-    #     book = get_object_or_404(Books, pk=pk)
-    #     serializer = BookUpdateSerializer(book, data=request.data)
-    #     queryset = User.objects.all()
-    #     authors = queryset.filter(id__in=request.POST.getlist('author[]'))
-    #     if serializer.is_valid():
-    #         serializer.save(author=authors)
-    #         return Response(serializer.data, status=200)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

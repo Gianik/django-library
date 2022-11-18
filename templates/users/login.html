@@ -2,15 +2,19 @@
 {% block content %}
 
     <div class="content-section">
+        
         <form  name='loginform' method="POST" id="loginform"  novalidate >
             {% csrf_token %}
 
             <fieldset class="form-group"> 
                 <legend class="border-bottom mb-4">Login</legend>
+                <h5 id="erremail" style='color:red;text-align:center;display:none'></h5>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value=""><br><br>
+                <input type="email" id="email" name="email" value=""><br>
+                <p id="erremail" style='color:red;display:none'></p>
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value=""><br><br>
+                <input type="password" id="password" name="password" value=""><br>
+                <p id="errpass" style='color:red;display:none'></p>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit"  >Log in</button>
@@ -28,18 +32,20 @@
 {% block javascript %}
 <script>
 $(document).ready(function(){
-    var pk = {{pk}}
+    var emailvalCheck = false
+    var pasvalidCheck = false
     $("#loginform").submit(function(event){
-        console.log('test')
-
+        event.preventDefault();
+        valEmail($('#email').val())
+        valPass(password:$('#password').val())
         let data= {
             email:$('#email').val(),
             password:$('#password').val(),
         }
 
-        event.preventDefault();
+        
         $.ajax({
-            url:"http://127.0.0.1:8000/login-logout-user/",
+            url:http+"/login-logout-user/",
             type:"POST",
             dataType:"JSON",
             data:data,
@@ -47,18 +53,75 @@ $(document).ready(function(){
                 xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
               },
             success:()=>{
-                window.location.replace("http://127.0.0.1:8000/")
+                $('#erremail').hide()
+                window.location.replace(http+"/")
             },
             error:(error)=>{
                 console.log(error)
+                if(error.status=404){
+                    $('#erremail').show()
+                    $("#erremail").html("User not found please check your email and password or register an account")
+                }
             },
         });
     return false;
 });  
     
 })
+function valEmail(email){
+    let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+    if(email.trim().length ===0){
+        $('#erremail').show()
+        $("#erremail").html("Empty email input please input your email properly.")
+        emailvalCheck = false
+        return false
+    }
+    if(email.length>500){
+        $('#erremail').show()
+        $("#erremail").html("Email exceeds max length please input another email.")
+        emailvalCheck = false
+        return false
+    }
+    if(!regex.test(email)){
+        $('#erremail').show()
+        $("#erremail").html("Invalid Email format please input a proper email.")
+        emailvalCheck = false
+        return false
+    }
+    emailvalCheck = true
+    $('#erremail').hide()
+    return true
+}
+function valPass(pass1,pass2){
+    if(pass1.trim().length ===0){
+        $('#errpass').show()
+        $("#errpass").html("Password cannot be empty")
+        passvalCheck = false
+        return false
+    }
+    if(pass1.length<8){
+        $('#errpass').show()
+        $("#errpass").html("Password should at least be 8 charachters")
+        passvalCheck = false
+        return false
+    }
+    if(pass1.length>4096){
+        $('#errpass').show()
+        $("#errpass").html("Password exceeds max length please put another password")
+        passvalCheck = false
+        return false
+    }
+    if(pass1.search(/[a-zA-Z]/) == -1){
+        $('#errpass').show()
+        $("#errpass").html("Password cannot all be numeric")
+        passvalCheck = false
+        return false
+    }
+    $('#errpass').hide()
+    passvalCheck = true
+    return true
 
-
+}
 </script>
       
 {% endblock %}

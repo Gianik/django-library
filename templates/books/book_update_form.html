@@ -10,7 +10,8 @@
             <input type="text" id="btitle" name="btitle" value=""><br><br>
 
             <label for="btags">Author:</label>
-            <input type="text" id="btags" name="btags" data-role="tagsinput"><br><br>
+            <input type="text" id="btags" name="btags" data-role="tagsinput"><br>
+            <p class="text-info">-Please Press Tab Or , To Add Another Author.</p>
 
             <label for="bstatus">Status:</label>
 
@@ -44,7 +45,7 @@
 
 
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Update Book</button>
+                <button class="btn btn-outline-warning" type="submit">Update Book</button>
             </div>
 
 
@@ -58,7 +59,7 @@ $(document).ready(function() {
     var pk = {{pk}}
     $.ajax({
         type:"GET",
-        url:'http://127.0.0.1:8000/book/update/detail/'+pk,
+        url:http+'/book/update/detail/'+pk,
         success:(data)=>{
           var html1=''
           var html2=''
@@ -91,7 +92,7 @@ $(document).ready(function() {
         location:$('#blocation').val(),
       }
       $.ajax({
-          url:'http://127.0.0.1:8000/book/update/detail/'+pk+"/",
+          url:http+'/book/update/detail/'+pk+"/",
           type:"POST",
           dataType:"JSON",
           data:data,

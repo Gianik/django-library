@@ -1,4 +1,4 @@
-
+var http = window.location.origin
 $(document).ready(function () {
 
 
@@ -6,11 +6,10 @@ $(document).ready(function () {
 })
 function homeList() {
     $.ajax({
-        url: 'http://127.0.0.1:8000/book',
+        url: http + '/book',
         type: "GET",
         dataType: "json",
         success: (data) => {
-            console.log(data)
             var html = '';
             $(data).each(function (index, value) {
                 html += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
@@ -30,7 +29,7 @@ function homeList() {
 };
 function logout() {
     $.ajax({
-        url: "http://127.0.0.1:8000/login-logout-user/",
+        url: http + "/login-logout-user/",
         type: 'GET',
         sucess: (data) => {
             return true
@@ -39,4 +38,9 @@ function logout() {
             console.log(error)
         }
     })
+};
+function formatString(str) {
+    return str
+        .replace(/(\B)[^ ]*/g, match => (match.toLowerCase()))
+        .replace(/^[^ ]/g, match => (match.toUpperCase()));
 }

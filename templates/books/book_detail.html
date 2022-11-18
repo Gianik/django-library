@@ -5,11 +5,11 @@
         <div class="media-body">
             <div class="article-metadata">
             <small class="text-muted"></small>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" id="ub" href="{% url 'book-update' pk %}" hidden >Update</a>
+                <a class="btn btn-warning btn-sm mt-1 mb-1" id="ub" href="{% url 'book-update' pk %}" hidden >Update</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" id="db" href="{% url 'book-delete' pk %}" hidden >Delete</a>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'book-comment' pk %}">New Comment</a>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1"  style="color:white" id="bb" hidden >Borrow Book</a>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1"  style="color:white" id="rb" hidden >Return Book</a>
+                <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'book-comment' pk %}">New Comment</a>
+                <a class="btn btn-info btn-sm mt-1 mb-1"  style="color:white" id="bb" hidden >Borrow Book</a>
+                <a class="btn btn-info btn-sm mt-1 mb-1"  style="color:white" id="rb" hidden >Return Book</a>
             </div>
             <div class="article-metadata" id="div1">
             
@@ -37,7 +37,7 @@ $(document).ready(function() {
     var pk = {{pk}}
     $.ajax({
         type:"GET",
-        url:'http://127.0.0.1:8000/book/book-detail/'+pk,
+        url:http+'/book/book-detail/'+pk,
         success:(data)=>{
             console.log(data)
             var html =''
@@ -69,8 +69,8 @@ $(document).ready(function() {
                 var y = date.getFullYear()
                 if(data.data2.id==value.author.id){
                     html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"+
-                        "<br><a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-dark btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#6c757d;'+'color:'+'white'+">Update Comment</button></a>  "+
-                        "<a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-danger btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#dc3545;'+'color:'+'white'+ "  >Delete Comment</button></a><hr>"
+                        "<br><a   href="+'http://127.0.0.1:8000/book/update/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-dark btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#ffc107;'+'color:'+'white'+">Update Comment</button></a>  "+
+                        "<a   href="+'http://127.0.0.1:8000/book/delete/comment/'+ value.id +"><button type="+'button'+" class="+'btn btn-danger btn-sm'+" style="+'font-size:'+'10px;'+'background-color:'+'#dc3545;'+'color:'+'white'+ "  >Delete Comment</button></a><hr>"
                 }
                 else{
                     html2+="Author: <h7 class="+'text-muted'+" >" + value.author.full_name  + "</h7><p><h6 class="+'mr-2'+" >" + value.text + "</h6></p><p>Updated On:<h7 class="+'text-muted'+"  >" + m + "-" + d + "-" + y + "</h7></p>"
@@ -92,7 +92,7 @@ $(document).ready(function() {
                 var html3=''
                 console.log('test1')
                 $.ajax({
-                    url: "http://127.0.0.1:8000/book/borrow-return/"+pk,
+                    url: http+"/book/borrow-return/"+pk,
                     type: 'GET',
                     sucess: (data) => {
                         console.log('test')
@@ -114,7 +114,7 @@ $(document).ready(function() {
                 console.log(data.data2.full_name)
                 console.log('test2')
                 $.ajax({
-                    url: "http://127.0.0.1:8000/book/borrow-return/"+pk,
+                    url: http+"/book/borrow-return/"+pk,
                     type: 'GET',
                     sucess: (data) => {
 

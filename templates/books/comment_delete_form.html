@@ -4,7 +4,7 @@
         <form method="POST" id="comment_delete">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Delete Post</legend>
+                <legend class="border-bottom mb-4">Delete Comment</legend>
                 <h2 id="atitle"></h2>
             </fieldset>
             <div class="form-group">
@@ -18,12 +18,12 @@
 $(document).ready(function(){
 var pk = {{pk}}
   $.ajax({
-    url: "http://127.0.0.1:8000/book/new-comment/"+pk,
+    url: http+"/book/new-comment/"+pk,
     type: "GET",
     dataType: "json",
     success: (data) => {
       console.log(data)
-      var html="<h5> Are you sure you want to delete the post " + data.text + " ?</h5>";
+      var html="<h5> Are you sure you want to delete the comment " + data.text + " ?</h5>";
       
         $('#atitle').append(html);
     },
@@ -35,7 +35,7 @@ var pk = {{pk}}
     event.preventDefault();
     let data = {text:$('#bcomment').val(),}
     $.ajax({
-        url:"http://127.0.0.1:8000/book/delete-comment/"+pk+"/",
+        url:http+"/book/delete-comment/"+pk+"/",
         type:"POST",
         dataType:"JSON",
         data:data,
