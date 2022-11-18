@@ -7,11 +7,13 @@
                 <legend class="border-bottom mb-4">Add New Book</legend>
             </fieldset>
             <label for="btitle">Title:</label>
-            <input type="text" id="btitle" name="btitle"><br><br>
+            <input type="text" id="btitle" name="btitle"><br>
+            <p id="errtitle" style='color:red;display:none'></p>
 
             <label for="btags">Author:</label>
             <input type="text" id="btags" name="btags" data-role="tagsinput"><br>
             <p class="text-info">-Please Press Tab Or , To Add Another Author.</p>
+            <p id="errauth" style='color:red;display:none'></p>
             <label for="bstatus">Status:</label>
 
             <select name="bstatus" id="bstatus">
@@ -51,33 +53,37 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-$(document).ready(function(){
-
+  var valCheckTitle = false;
+  var valCheckAuth = false;
     $("#post_book").submit(function(event){
-        event.preventDefault();
-      let data={  
-        title:$('#btitle').val(),
-        author:$('#bauthor').val(),
-        status:$('#bstatus').val(),
-        type:$('#btype').val(),
-        location:$('#blocation').val(),
-        author_tags:$('#btags').tagsinput('items'),
-      }
-        $.ajax({
-            url:http+"/book/",
-            type:"POST",
-            dataType:"JSON",
-            data:data,
-            beforeSend: function (xhr){
-              xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-            },
-            success:()=>{
-                window.location.replace("http://127.0.0.1:8000/")
-            },
-            error:(error)=>{
-                console.log(error)
-            },
-        });
+      event.preventDefault();
+      valTitle($('#btitle').val())
+      valAuth($('#btags').tagsinput('items'))
+      if(valCheckTitle===true&&valCheckAuth===true){
+        let data={  
+          title:$('#btitle').val(),
+          author:$('#bauthor').val(),
+          status:$('#bstatus').val(),
+          type:$('#btype').val(),
+          location:$('#blocation').val(),
+          author_tags:$('#btags').tagsinput('items'),
+        }
+          $.ajax({
+              url:http+"/book/",
+              type:"POST",
+              dataType:"JSON",
+              data:data,
+              beforeSend: function (xhr){
+                xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+              },
+              success:()=>{
+                  window.location.replace(http+"/")
+              },
+              error:(error)=>{
+                  console.log(error)
+              },
+          });
+        }
     return false;
 });  
 $("#btype").change(function () {
@@ -90,7 +96,42 @@ $("#btype").change(function () {
   }
 
 })
-})
+function valTitle(text){
+  if(text.trim().length==0){
+      $('#errtitle').show()
+      $("#errtitle").html("Empty Title input please input your Title properly.")
+      valCheckTitle = false
+      return false
+  }
+  if(text.length>100){
+      $('#errtitle').show()
+      $("#errtitle").html("Title input exceed max length please try again.")
+      valCheckTitle = false
+      return false
+  }
+  $('#errtitle').hide()
+  valCheckTitle = true
+  return true
+}
+function valAuth(auth){
+  if(!auth||!auth.length){
+    $('#errauth').show()
+    $("#errauth").html("Empty Author input please input  Author List properly.")
+    valCheckAuth = false
+    return false
+  }
+  auth.map(function(name){
+    if(name>50){
+      $('#errauth').show()
+      $("#errauth").html("Author name: "+name+" exceeds max length please re evaluate your input")
+      valCheckAuth = false
+      return false
+    }
+  })
+  $('#errauth').hide()
+  valCheckAuth = true
+  return true
+}
 </script>
 {% endblock %}
 

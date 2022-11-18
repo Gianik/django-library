@@ -1,7 +1,5 @@
 from django.db import models
 from users.models import User
-from taggit.managers import TaggableManager
-from taggit.models import TaggedItemBase
 
 
 class Authors(models.Model):

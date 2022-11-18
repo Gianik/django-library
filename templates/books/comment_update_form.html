@@ -9,7 +9,8 @@
                 <legend class="border-bottom mb-4">Update Comment</legend>
             </fieldset>
             <label for="bcomment">Comment Text:</label>
-            <input type="text" id="bcomment" name="bcomment" value=""><br><br>
+            <input type="text" id="bcomment" name="bcomment" value=""><br>
+            <p id="errcm" style='color:red;display:none'></p>
             <div class="form-group">
                 <button class="btn btn-outline-warning" type="submit">Post Comment</button>
 
@@ -23,8 +24,9 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-$(document).ready(function(){
+
 var pk = {{pk}}
+var valCheckCM = false
   $.ajax({
     url: http+"/book/new-comment/"+pk,
     type: "GET",
@@ -42,6 +44,7 @@ var pk = {{pk}}
   });
   $("#update_comment").submit(function(event){
     event.preventDefault();
+    valCM($('#bcomment').val())
     let data = {text:$('#bcomment').val(),}
     $.ajax({
         url:http+"/book/update-comment/"+pk+"/",
@@ -60,7 +63,22 @@ var pk = {{pk}}
     });
 return false;
 });  
-
-})
+function valCM(text){
+  if(text.trim().length==0){
+      $('#errcm').show()
+      $("#errcm").html("Empty Comment input please input your Comment properly.")
+      valCheckCM = false
+      return false
+  }
+  if(text.length>100){
+      $('#errcm').show()
+      $("#errcm").html("Comment input exceed max length please try again.")
+      valCheckCM = false
+      return false
+  }
+  $('#errcm').hide()
+  valCheckCM = true
+  return true
+}
 </script>
 {% endblock %}

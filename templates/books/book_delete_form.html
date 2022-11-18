@@ -15,7 +15,6 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-    $(document).ready(function() {
         var pk = {{pk}}
         $.ajax({
             type:"GET",
@@ -50,13 +49,6 @@
             });
             return false;
         });
-
-
-
-
-    
-    
-    });
 
 
 

@@ -9,7 +9,8 @@
                 <legend class="border-bottom mb-4">New Comment</legend>
             </fieldset>
             <label for="bcomment">Comment Text:</label>
-            <input type="text" id="bcomment" name="bcomment" value=""><br><br>
+            <input type="text" id="bcomment" name="bcomment" value=""><br>
+            <p id="errcm" style='color:red;display:none'></p>
             <div class="form-group">
                 <button class="btn btn-outline-success" type="submit">Post Comment</button>
 
@@ -25,9 +26,12 @@
 <script>
 //$(document).ready(function(){
     var pk = {{pk}}
-
+    var valCheckCM = false
     $("#post_comment").submit(function(event){
         event.preventDefault();
+
+        valCM($('#bcomment').val())
+
         let data ={
             text:$('#bcomment').val(),
             book:pk,
@@ -44,7 +48,7 @@
                 xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
               },
             success:()=>{
-                window.location.replace("http://127.0.0.1:8000/")
+                window.location.replace(http+"/book/detail/"+pk)
             },
             error:(error)=>{
                 console.log(error)
@@ -53,7 +57,23 @@
     return false;
 });  
     
-//})
+function valCM(text){
+    if(text.trim().length==0){
+        $('#errcm').show()
+        $("#errcm").html("Empty Comment input please input your Comment properly.")
+        valCheckCM = false
+        return false
+    }
+    if(text.length>100){
+        $('#errcm').show()
+        $("#errcm").html("Comment input exceed max length please try again.")
+        valCheckCM = false
+        return false
+    }
+    $('#errcm').hide()
+    valCheckCM = true
+    return true
+}
 
 
 </script>

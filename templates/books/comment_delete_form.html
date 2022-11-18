@@ -15,7 +15,6 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-$(document).ready(function(){
 var pk = {{pk}}
   $.ajax({
     url: http+"/book/new-comment/"+pk,
@@ -52,6 +51,6 @@ var pk = {{pk}}
 return false;
 });  
 
-})
+
 </script>
 {% endblock %}
