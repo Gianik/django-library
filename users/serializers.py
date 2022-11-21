@@ -1,29 +1,26 @@
 from rest_framework import serializers
 from .models import User
 from django.conf import settings
-from books.models import Books
+from books.models import Books, Authors
 
 # from books.serializers import BookUserListSerializer
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    full_name = serializers.SerializerMethodField()
+    # full_name = serializers.SerializerMethodField()
 
     class Meta:
-        model = User
-        fields = ['id', 'full_name']
-
-    def get_full_name(self, obj):
-        return '{} {}'.format(obj.first_name, obj.last_name)
+        model = Authors
+        fields = ['author']
 
 
 class BookUserListSerializer(serializers.ModelSerializer):
 
-    author = AuthorSerializer(read_only=True, many=True)
+    author_tags = AuthorSerializer(read_only=True, many=True)
 
     class Meta:
         model = Books
-        fields = ['id', 'title', 'author']
+        fields = ['id', 'title', 'author_tags']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

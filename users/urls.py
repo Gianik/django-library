@@ -14,13 +14,13 @@ urlpatterns = [
     path('authors/', login_required(AuthorChoiceViewSet.as_view({
         'get': 'list'
     })), name='book-list'),
-    path('login-logout-user/', login_required(UserViewSet.as_view({
+    path('login-logout-user/', UserViewSet.as_view({
         'post': 'log_in',
         'get': 'log_out'
-    })), name='login-logout-user'),
-    path('register-user/', login_required(UserViewSet.as_view({
+    }), name='login-logout-user'),
+    path('register-user/', UserViewSet.as_view({
         'post': 'user_register'
-    })), name='register-user'),
+    }), name='register-user'),
     path('detail/', login_required(UserViewSet.as_view({
         'get': 'user_details'
     })), name='book-list'),

@@ -29,7 +29,7 @@
         type: "GET",
         dataType: "json",
         success: (data) => {
-            console.log(data)
+            console.log(data.book_owner[0].author_tags)
             var html1='';
             var html2='';
             $('#avatarpic').attr('src', data.avatar)
@@ -37,15 +37,15 @@
             $('#uemail').html("<p  class="+'text-secondary'+" >"+ data.email + "</p>")
             $(data.book_owner).each(function (index, value) {
                 html1 += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
-                $(value.author).each(function (index, value2) {
-                    html1 += "<a class=" + 'mr-2' + "  >" + value2.full_name + " </a>"
+                $(value.author_tags).each(function (index, value2) {
+                    html1 += "<a class=" + 'mr-2' + "  >" + value2.author + " </a>"
                 })
                 html1 += "</div>"
             })
             $(data.book_borrower).each(function (index, value) {
                 html2 += "<div class=" + 'article-metadata' + " ><h2><a class=" + 'article-title' + " href=" + 'http://127.0.0.1:8000/book/detail/' + value.id + " >Title: " + value.title + "</a></h2>Author: "
-                $(value.author).each(function (index, value2) {
-                    html2 += "<a class=" + 'mr-2' + "  >" + value2.full_name + " </a>"
+                $(value.author_tags).each(function (index, value2) {
+                    html2 += "<a class=" + 'mr-2' + "  >" + value2.author + " </a>"
                 })
                 html2 += "</div>"
             })            
