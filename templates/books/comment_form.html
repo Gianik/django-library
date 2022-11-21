@@ -25,48 +25,45 @@
 {% endblock content %}
 {% block javascript %}
 <script>
-//$(document).ready(function(){
     var pk = {{pk}}
     var valCheckCM = false
     $("#post_comment").submit(function(event){
         event.preventDefault();
 
-        valCM($('#bcomment').val())
+         valCM($('#bcomment').val())
 
         let data ={
             text:$('#bcomment').val(),
             book:pk,
         }
-        console.log(window.location.origin)
-        console.log(http)
-        console.log(window.location.protocol)
-        $.ajax({
-            url:http+"/book/new-comment/"+pk+"/",
-            type:"POST",
-            dataType:"JSON",
-            data:data,
-            beforeSend: function (xhr){
-                xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-              },
-            success:()=>{
-                window.location.replace(http+"/book/detail/"+pk)
-            },
-            error:(error)=>{
-                $('#err').show()
-                $("#err").html("Server error please refresh and try again")
-            },
-        });
+        if(valCheckCM==true){
+            $.ajax({
+                url:http+"/book/new-comment/"+pk+"/",
+                type:"POST",
+                dataType:"JSON",
+                data:data,
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+                },
+                success:()=>{
+                    window.location.replace(http+"/book/detail/"+pk)
+                },
+                error:(error)=>{
+                    $('#err').show()
+                    $("#err").html("Server error please refresh and try again")
+                },
+            });
+        }
     return false;
 });  
-    
-function valCM(text){
-    if(text.trim().length==0){
+function valCM(text) {
+    if (text.trim().length == 0) {
         $('#errcm').show()
         $("#errcm").html("Empty Comment input please input your Comment properly.")
         valCheckCM = false
         return false
     }
-    if(text.length>100){
+    if (text.length > 100) {
         $('#errcm').show()
         $("#errcm").html("Comment input exceed max length please try again.")
         valCheckCM = false
@@ -75,7 +72,8 @@ function valCM(text){
     $('#errcm').hide()
     valCheckCM = true
     return true
-}
+}  
+
 
 
 </script>

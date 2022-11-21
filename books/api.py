@@ -121,10 +121,11 @@ class CommentsViewSet(viewsets.ViewSet):
         serializer = CommentsSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=200)
+            return Response({'id': comment.book.id}, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         comment = get_object_or_404(Comments, pk=pk)
+        id = comment.book.id
         comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': id}, status=200)

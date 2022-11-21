@@ -43,19 +43,10 @@ function logout() {
         }
     })
 };
+
 function formatString(str) {
     return str
         .replace(/(\B)[^ ]*/g, match => (match.toLowerCase()))
         .replace(/^[^ ]/g, match => (match.toUpperCase()));
 }
-setTimeout(function () {
-    if ($('#message').length > 0) {
-        $('#message').hide();
-    }
-    if ($('#message2').length > 0) {
-        $('#message2').hide();
-    }
-    if ($('#message3').length > 0) {
-        $('#message3').hide();
-    }
-}, 3000);
+

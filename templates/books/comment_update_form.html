@@ -52,24 +52,29 @@ var valCheckCM = false
   $("#update_comment").submit(function(event){
     event.preventDefault();
     valCM($('#bcomment').val())
-    let data = {text:$('#bcomment').val(),}
-    $.ajax({
-        url:http+"/book/update-comment/"+pk+"/",
-        type:"POST",
-        dataType:"JSON",
-        data:data,
-        beforeSend: function (xhr){
-            xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
-          },       
-        success:()=>{
-            window.location.replace(http+"/")
-        },
-        error:(error)=>{
-          $('#err').show()
-          $("#err").html("Server error please refresh and try again")
-        },
-    });
-return false;
+    if(valCheckCM==true){
+      let data = {text:$('#bcomment').val(),}
+    
+      $.ajax({
+          url:http+"/book/update-comment/"+pk+"/",
+          type:"POST",
+          dataType:"JSON",
+          data:data,
+          beforeSend: function (xhr){
+              xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
+            },       
+          success:(data)=>{
+              console.log(data.id)
+              
+              window.location.replace(http+"/book/detail/"+data.id)
+          },
+          error:(error)=>{
+            $('#err').show()
+            $("#err").html("Server error please refresh and try again")
+          },
+      });
+    }
+  return false;
 });  
 function valCM(text){
   if(text.trim().length==0){

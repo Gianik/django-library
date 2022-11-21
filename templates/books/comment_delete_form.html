@@ -48,8 +48,9 @@ var pk = {{pk}}
         beforeSend: function (xhr){
             xhr.setRequestHeader('X-CSRFToken', $('input[name=csrfmiddlewaretoken]').val());
           },
-        success:()=>{
-            window.location.replace("http://127.0.0.1:8000/")
+        success:(data)=>{
+           
+            window.location.replace(http+"/book/detail/"+data.id)
         },
         error:(error)=>{
           $('#err').show()
